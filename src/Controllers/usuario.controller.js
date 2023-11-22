@@ -1,6 +1,6 @@
 //importar los modelas y sus relaciones
 import "../Database/relaciones.js";
-import { Usuario } from "../models/usuario.js"
+import { Usuario } from "../Models/usuario.js"
 
 //CRUD basico para el modelo Usuario
 // Obtener la lista de usuarios

@@ -1,4 +1,4 @@
-import { Usuario } from "../models/usuario.js";
+import { Usuario } from "../Models/usuario.js";
 import { sendEmail } from "../services/email.js";
 
 

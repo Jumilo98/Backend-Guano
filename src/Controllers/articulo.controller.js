@@ -1,5 +1,5 @@
 import "../Database/relaciones.js";
-import { Articulo } from "../models/articulo.js"
+import { Articulo } from "../Models/articulo.js"
 
 //CRUD basico para el modelo Articulo
 

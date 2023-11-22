@@ -1,5 +1,5 @@
 import app from './app.js'
-import {sequelize} from './database/db.js'
+import {sequelize} from './Database/db.js'
 import * as dotenv from 'dotenv'; 
 
 dotenv.config();

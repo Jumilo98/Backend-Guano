@@ -1,5 +1,5 @@
 import "../Database/relaciones.js";
-import { Producto } from "../models/producto.js"
+import { Producto } from "../Models/producto.js"
 
 //CRUD basico para el modelo producto
 // Obtener la lista de productos 

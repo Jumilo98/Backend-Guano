@@ -5,10 +5,10 @@ import cors from 'cors'
 import multer from 'multer';
 import {v2 as cloudinary} from 'cloudinary';
 
-import usuarioRoutes from './routes/usuario.routes.js'
-import imagenRoutes from './routes/imagen.routes.js'
-import productoRoutes from './routes/producto.routes.js'
-import articuloRoutes from './routes/articulo.routes.js'
+import usuarioRoutes from './Routes/usuario.routes.js'
+import imagenRoutes from './Routes/imagen.routes.js'
+import productoRoutes from './Routes/producto.routes.js'
+import articuloRoutes from './Routes/articulo.routes.js'
 
 cloudinary.config({ 
     cloud_name: 'dg2squ3zi', 

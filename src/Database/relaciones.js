@@ -1,5 +1,5 @@
 //Importar los modelos para poder crear la relaciones
-import { Usuario } from "../models/usuario.js";
+import { Usuario } from "../Models/usuario.js";
 //import { Rol } from "../models/rol.js";
 //import { Evento } from "../models/evento.js";
 //import { Valoracion } from "../models/valoracion.js";
@@ -11,7 +11,7 @@ import { Imagen } from "../Models/imagen.js";
 import { Producto } from "../Models/producto.js";
 
 import { DataTypes } from "sequelize"
-import { sequelize }  from "../database/db.js"
+import { sequelize }  from "../Database/db.js"
 
 // relacion uno a uno Articulo - Producto
 Articulo.hasOne(Producto, { foreignKey:'id_articulo'});

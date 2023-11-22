@@ -1,5 +1,5 @@
 //importar los modelas y sus relaciones
-import "../database/relaciones.js";
+import "../Database/relaciones.js";
 import { Imagen } from "../Models/imagen.js"
 
 //CRUD basico para el modelo Imagen
