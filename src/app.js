@@ -5,10 +5,10 @@ import cors from 'cors'
 import multer from 'multer';
 import {v2 as cloudinary} from 'cloudinary';
 
-import administradorRoutes from './routes/administrador.routes.js'
-import contactanosRoutes from './routes/contactanos.routes.js'
-import destinoRoutes from './routes/destino.routes.js'
-import lacteoRoutes from './routes/lacteo.routes.js'
+import usuarioRoutes from './routes/usuario.routes.js'
+import imagenRoutes from './routes/imagen.routes.js'
+import productoRoutes from './routes/producto.routes.js'
+import articuloRoutes from './routes/articulo.routes.js'
 
 cloudinary.config({ 
     cloud_name: 'dg2squ3zi', 
@@ -39,16 +39,18 @@ app.post("/upload", upload.single("image"),async(req, res)=>{
     }
 });
 
-//Rutas de acceso al area
-app.use(administradorRoutes);
 
-//Rutas de acceso al login 
-app.use(contactanosRoutes);
 
-//Rutas de acceso Rol
-app.use(destinoRoutes)
+//Rutas de acceso al usuario
+app.use(usuarioRoutes);
 
-//Rutas de acceso al usuario 
-app.use(lacteoRoutes)
+//Rutas de acceso al imagen 
+app.use(imagenRoutes);
+
+//Rutas de acceso producto
+app.use(productoRoutes)
+
+//Rutas de acceso al articulo 
+app.use(articuloRoutes)
 
 export default app;

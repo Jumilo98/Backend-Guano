@@ -1,33 +1,32 @@
 import { DataTypes } from "sequelize"
 import { sequelize }  from "../database/db.js"
 
-export const Destino = sequelize.define('Destinos', {
 
-    id_destino: {
+export const Articulo = sequelize.define('Articulos', {
+
+    id_articulo: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         unique: true,
         autoIncrement: true
     },
-    nombre_destino: {
+
+    nombres_articulo: {
         type: DataTypes.STRING(50),
     },
-    ubicacion_destino: {
-        type: DataTypes.STRING(100),
+    
+    etiqueta_articulo:{
+        type: DataTypes.STRING(50),
     },
-    descripcion_destino: {
+   
+    descripcion_articulo: {
         type: DataTypes.STRING(500),
     },
-    imagenes_destino: {
-        type: DataTypes.STRING(50),
-    },
-    likes_destino: {
+
+    likes_articulo: {
         type: DataTypes.INTEGER,
     },
-    etiqueta_destino: {
-        type: DataTypes.STRING(50),
-    },
-
+    
 }, {
     timestamps: true
 });

@@ -1,32 +1,30 @@
 import { DataTypes } from "sequelize"
 import { sequelize }  from "../database/db.js"
 
-export const Contacto = sequelize.define('Contactanos', {
+export const Usuario = sequelize.define('Usuarios', {
 
-    id_contacto: {
+    id_usuario: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         unique: true,
         autoIncrement: true
     },
-    nombre_contacto: {
+
+    nombres_usuario:{
         type: DataTypes.STRING(50),
     },
-    apellido_contacto: {
+
+    apellidos_usuario:{
         type: DataTypes.STRING(50),
     },
-    correo_contacto: {
+
+    email_usuario:{
         type: DataTypes.STRING(50),
     },
-    telefono_contacto: {
+
+    contrasenia_usuario:{
         type: DataTypes.STRING(50),
-    },
-    mensaje_contacto: {
-        type: DataTypes.STRING(500),
-    },
-    fecha_contacto: {
-        type: DataTypes.DATE,
-    },
+    },    
 
 }, {
     timestamps: true

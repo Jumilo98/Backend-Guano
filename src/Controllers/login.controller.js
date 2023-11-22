@@ -3,20 +3,20 @@ import { sendEmail } from "../services/email.js";
 
 
 export const verificarUsuario = async (req, res) => {
-    const {username, password} = req.body;
+    const {email, contrasenia} = req.body;
 
     try {
 
         const usuarioEncontrado = await Usuario.findOne({
             where: {
-                nombre_usuario: username
+                email_usuario: email
             }
         });
     
         if (! usuarioEncontrado) 
             return res.status(404).json({message: "Usuario no registrado"});
         
-        if (usuarioEncontrado.contraseña != password) {
+        if (usuarioEncontrado.contrasenia != password) {
             return res.status(403).json({message: "Contraseña incorrecta"});
         } else {
             res.json({error: null, data: 'Bienvenido'})
@@ -28,16 +28,16 @@ export const verificarUsuario = async (req, res) => {
 };
 
 export const recuperarContrasenia = async (req, res) => {
-    const {username, email } = req.body;
+    const {nombres_usuario, email } = req.body;
     try {
         const usuarioEncontrado = await Usuario.findOne({
             where: {
-                nombre_usuario: username
+                email_usuario: email
             }});
 
-        const password = "Su contraseña es: " + usuarioEncontrado.contraseña;
-        const asunto = "Servicio de recuperación de contraseña para: " + usuarioEncontrado.nombre_usuario; 
-        const mensaje = await sendEmail( asunto , password, email );
+        const contrasenia = "Su contraseña es: " + usuarioEncontrado.contrasenia;
+        const asunto = "Servicio de recuperación de contraseña para: " + usuarioEncontrado.nombres_usuario; 
+        const mensaje = await sendEmail( asunto , contrasenia, email );
         console.log(mensaje.messageId)
         return res.json({error: null, data: 'Mensaje enviado correctamente'})
 
