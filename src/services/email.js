@@ -1,4 +1,4 @@
-/*import nodemailer from "nodemailer";
+import nodemailer from "nodemailer";
 import * as dotenv from 'dotenv'; 
 
 dotenv.config();
@@ -22,7 +22,7 @@ export const sendEmail = async (asunto,texto,email) => {
   const transporter = createTrans();
 
   const mensaje  = await transporter.sendMail({
-    from: '"SSO GADM-RIOBAMBA" <SSO@GADMRiobamba.com>', // sender address
+    from: '"GADM GUANO" <Lacteos@GADMGuano.com>', // sender address
     to: `${email}`, // list of receivers
     subject: `${asunto}`, // Subject line
     text: `${texto}`, // plain text body
@@ -30,4 +30,3 @@ export const sendEmail = async (asunto,texto,email) => {
   });
   return mensaje;
 };
-*/

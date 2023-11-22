@@ -16,7 +16,7 @@ export const verificarUsuario = async (req, res) => {
         if (! usuarioEncontrado) 
             return res.status(404).json({message: "Usuario no registrado"});
         
-        if (usuarioEncontrado.contrasenia != password) {
+        if (usuarioEncontrado.contrasenia_usuario != password) {
             return res.status(403).json({message: "Contraseña incorrecta"});
         } else {
             res.json({error: null, data: 'Bienvenido'})
@@ -35,7 +35,7 @@ export const recuperarContrasenia = async (req, res) => {
                 email_usuario: email
             }});
 
-        const contrasenia = "Su contraseña es: " + usuarioEncontrado.contrasenia;
+        const contrasenia = "Su contraseña es: " + usuarioEncontrado.contrasenia_usuario;
         const asunto = "Servicio de recuperación de contraseña para: " + usuarioEncontrado.nombres_usuario; 
         const mensaje = await sendEmail( asunto , contrasenia, email );
         console.log(mensaje.messageId)
