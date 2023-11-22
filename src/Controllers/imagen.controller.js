@@ -36,7 +36,7 @@ export const createImagen  = async (req, res) => {
     const { url, cloudinary } = req.body;
     try {
         // Creando un nuevo imagen con el metodo create
-        const nuevoimagen =  await Imagen.create({
+        const nuevoImagen =  await Imagen.create({
             url_imagen: url,
             id_imagen_cloudinary: cloudinary,
         });
@@ -68,10 +68,10 @@ export const updateImagen = async (req, res) => {
   // Borrar un producto
   export const deleteImagen = async (req, res) => {
     try {
-      const { id } = req.params;
+      const { id_imagen } = req.params;
       await Imagen.destroy({
         where: {
-          id_imagen: id,
+          id_imagen: id_imagen,
         },
       });
       res.sendStatus(204);

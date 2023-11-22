@@ -67,10 +67,10 @@ export const updateUsuario = async (req, res) => {
 // Borrar un Usuario
 export const deleteUsuario= async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id_usuario } = req.params;
     await Usuario.destroy({
       where: {
-        id_usuario: id,
+        id_usuario: id_usuario,
       },
     });
     res.sendStatus(204);

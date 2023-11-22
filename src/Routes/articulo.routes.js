@@ -8,8 +8,8 @@ const router = Router();
 
 router.get('/articulos', getAllArticulos);
 router.post('/articulo', createArticulo);
-router.put('/articulo/:cedula_empleado', updateArticulo);
-router.delete('/articulo/:cedula_empleado', deleteArticulo);
-router.get('/articulo/:cedula_empleado', getArticuloById);
+router.put('/articulo/:id_articulo', updateArticulo);
+router.delete('/articulo/:id_articulo', deleteArticulo);
+router.get('/articulo/:id_articulo', getArticuloById);
 
 export default router

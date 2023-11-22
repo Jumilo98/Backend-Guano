@@ -1,44 +1,51 @@
---Llenado de tabla administradores
-INSERT INTO public."Administradores" (nombre_administrador, contraseña_administrador, correo_administrador, "createdAt", "updatedAt") 
-VALUES ('Homero Vinicio', 'Silva2000', 'silva200@hotmail.com', NOW(), NOW());
-INSERT INTO public."Administradores" (nombre_administrador, contraseña_administrador, correo_administrador, "createdAt", "updatedAt") 
-VALUES ('Jimmy Granizo', 'Granizo1998', 'granizo1998@hotmail.com', NOW(), NOW());
-INSERT INTO public."Administradores" (nombre_administrador, contraseña_administrador, correo_administrador, "createdAt", "updatedAt") 
-VALUES ('Luis Daga', 'Daga1999', 'daga1999@hotmail.com', NOW(), NOW());
-INSERT INTO public."Administradores" (nombre_administrador, contraseña_administrador, correo_administrador, "createdAt", "updatedAt") 
-VALUES ('Katty Sanchez', 'Sanchez1997', 'sanchez1997@hotmail.com', NOW(), NOW());
-INSERT INTO public."Administradores" (nombre_administrador, contraseña_administrador, correo_administrador, "createdAt", "updatedAt") 
-VALUES ('Jhonatan Bonilla', 'Bonilla2000', 'bonilla200@hotmail.com', NOW(), NOW());
---Llenado de tabla contactanos
-INSERT INTO public."Contactanos" (nombre_imagen, apellido_imagen, correo_imagen, telefono_imagen, mensaje_imagen, fecha_imagen, "createdAt", "updatedAt") 
-VALUES ('Juan', ' Madancos', 'juanmadancos@hotmail.com','0995507028', 'Valen un 1 amigos', NOW(), NOW(), NOW());
-INSERT INTO public."Contactanos" (nombre_imagen, apellido_imagen, correo_imagen, telefono_imagen, mensaje_imagen, fecha_imagen, "createdAt", "updatedAt") 
-VALUES ('Jose', ' Ruiz', 'joseruiz@hotmail.com','0995507027', 'Valen un 2 amigos', NOW(), NOW(), NOW());
-INSERT INTO public."Contactanos" (nombre_imagen, apellido_imagen, correo_imagen, telefono_imagen, mensaje_imagen, fecha_imagen, "createdAt", "updatedAt") 
-VALUES ('Jorge', ' Pedestal', 'jorgepedestal@hotmail.com','0995507026', 'Valen un 3 amigos', NOW(), NOW(), NOW());
-INSERT INTO public."Contactanos" (nombre_imagen, apellido_imagen, correo_imagen, telefono_imagen, mensaje_imagen, fecha_imagen, "createdAt", "updatedAt") 
-VALUES ('Julio', ' Mesias', 'juliomesias@hotmail.com','0995507025', 'Valen un 4 amigos', NOW(), NOW(), NOW());
-INSERT INTO public."Contactanos" (nombre_imagen, apellido_imagen, correo_imagen, telefono_imagen, mensaje_imagen, fecha_imagen, "createdAt", "updatedAt") 
-VALUES ('Jesus', ' Granizo', 'jesusgranizo@hotmail.com','0995507024', 'Valen un 5 amigos', NOW(), NOW(), NOW());
+--Llenado de tabla usuarios
+INSERT INTO public."Usuarios" (nombres_usuario, apellidos_usuario, email_usuario, contrasenia_usuario, "createdAt", "updatedAt") 
+VALUES ('Jimmy', 'Granizo', 'granizo1998@hotmail.com', 'Granizo1998', NOW(), NOW());
+INSERT INTO public."Usuarios" (nombres_usuario, apellidos_usuario, email_usuario, contrasenia_usuario, "createdAt", "updatedAt") 
+VALUES ('Luuis', 'Granizo', 'granizo19@hotmail.com', 'Granizo19', NOW(), NOW());
+INSERT INTO public."Usuarios" (nombres_usuario, apellidos_usuario, email_usuario, contrasenia_usuario, "createdAt", "updatedAt") 
+VALUES ('Andres', 'Granizo', 'granizo@hotmail.com', 'Granizo', NOW(), NOW());
+INSERT INTO public."Usuarios" (nombres_usuario, apellidos_usuario, email_usuario, contrasenia_usuario, "createdAt", "updatedAt") 
+VALUES ('Jonna', 'Granizo', 'grani@hotmail.com', 'Grani', NOW(), NOW());
+
+
+--Llenado de tabla articulo
+INSERT INTO public."Articulos" (nombres_articulo, etiqueta_articulo, descripcion_articulo, likes_articulo, "createdAt", "updatedAt") 
+VALUES ('Leche', ' Lacteo', 'Es una Leche para vender',2, NOW(), NOW());
+INSERT INTO public."Articulos" (nombres_articulo, etiqueta_articulo, descripcion_articulo, likes_articulo, "createdAt", "updatedAt") 
+VALUES ('Queso', ' Lacteo', 'Es una Queso para vender',3, NOW(), NOW());
+INSERT INTO public."Articulos" (nombres_articulo, etiqueta_articulo, descripcion_articulo, likes_articulo, "createdAt", "updatedAt") 
+VALUES ('Yogurt', ' Lacteo', 'Es una Yogurt para vender',4, NOW(), NOW());
+INSERT INTO public."Articulos" (nombres_articulo, etiqueta_articulo, descripcion_articulo, likes_articulo, "createdAt", "updatedAt") 
+VALUES ('Quesillo', ' Lacteo', 'Es una Quesillo para vender',5, NOW(), NOW());
+
+
+--Llenado de tabla Imagenes
+INSERT INTO public."Imagenes" (url_imagen, id_imagen_cloudinary, id_articulo) 
+VALUES ('http://res.cloudinary.com/dg2squ3zi/image/upload/v1700629238/uzb0gzycaq0px3itpmru.jpg', 'uzb0gzycaq0px3itpmru', 1);
+INSERT INTO public."Imagenes" (url_imagen, id_imagen_cloudinary, id_articulo) 
+VALUES ('http://res.cloudinary.com/dg2squ3zi/image/upload/v1700629238/uzb0gzycaq0px3itpmru.jpg', 'uzb0gzycaq0px3itpmru', 2);
+INSERT INTO public."Imagenes" (url_imagen, id_imagen_cloudinary, id_articulo) 
+VALUES ('http://res.cloudinary.com/dg2squ3zi/image/upload/v1700629238/uzb0gzycaq0px3itpmru.jpg', 'uzb0gzycaq0px3itpmru', 3);
+INSERT INTO public."Imagenes" (url_imagen, id_imagen_cloudinary, id_articulo) 
+VALUES ('http://res.cloudinary.com/dg2squ3zi/image/upload/v1700629238/uzb0gzycaq0px3itpmru.jpg', 'uzb0gzycaq0px3itpmru', 4);
+
 --Llenado de tabla productos
-INSERT INTO public."productos" (nombre_producto, ubicacion_producto, descripcion_producto, imagenes_producto, likes_producto, etiqueta_producto, "createdAt", "updatedAt") 
-VALUES ('Parque Guano', 'Guano', 'Es un parque con muchas cosas en su centro', 'asdadasdasdasdasdasd', 2, 'Lugar 1', NOW(), NOW());
-INSERT INTO public."productos" (nombre_producto, ubicacion_producto, descripcion_producto, imagenes_producto, likes_producto, etiqueta_producto, "createdAt", "updatedAt") 
-VALUES ('Parque Riobamba', 'Riobamba', 'Es 2 parque con muchas cosas en su centro', 'bbjfbjdkfbdkjf', 3, 'Lugar 2', NOW(), NOW());
-INSERT INTO public."productos" (nombre_producto, ubicacion_producto, descripcion_producto, imagenes_producto, likes_producto, etiqueta_producto, "createdAt", "updatedAt") 
-VALUES ('Parque Ambato', 'Ambato', 'Es 3 parque con muchas cosas en su centro', 'cjclkjlkjlj', 4, 'Lugar 3', NOW(), NOW());
-INSERT INTO public."productos" (nombre_producto, ubicacion_producto, descripcion_producto, imagenes_producto, likes_producto, etiqueta_producto, "createdAt", "updatedAt") 
-VALUES ('Parque Quito', 'Quito', 'Es 4 parque con muchas cosas en su centro', 'dopipoip', 25, 'Lugar 4', NOW(), NOW());
-INSERT INTO public."productos" (nombre_producto, ubicacion_producto, descripcion_producto, imagenes_producto, likes_producto, etiqueta_producto, "createdAt", "updatedAt") 
-VALUES ('Parque Chambo', 'Chambo', 'Es 5 parque con muchas cosas en su centro', 'epekbhbekjejlk', 6, 'Lugar 5', NOW(), NOW());
---Llenado de tabla articulos
-INSERT INTO public."articulos" (nombre_articulo, fecha_caducidad_articulo, descripcion_articulo, precio_articulo, imagenes_articulo, likes_articulo, etiqueta_articulo, "createdAt", "updatedAt") 
-VALUES ('Yogurt', '1-12-2024', 'Es un 1', 12, 'ababdsbmdsnb', 2, 'Producto', NOW(), NOW());
-INSERT INTO public."articulos" (nombre_articulo, fecha_caducidad_articulo, descripcion_articulo, precio_articulo, imagenes_articulo, likes_articulo, etiqueta_articulo, "createdAt", "updatedAt") 
-VALUES ('Leche', '2-12-2024', 'Es un 2', 13, 'bsjdlaskjdlask', 3, 'Producto', NOW(), NOW());
-INSERT INTO public."articulos" (nombre_articulo, fecha_caducidad_articulo, descripcion_articulo, precio_articulo, imagenes_articulo, likes_articulo, etiqueta_articulo, "createdAt", "updatedAt") 
-VALUES ('Queso', '3-12-2024', 'Es un 3', 14, 'cisdsidu', 4, 'Producto', NOW(), NOW());
-INSERT INTO public."articulos" (nombre_articulo, fecha_caducidad_articulo, descripcion_articulo, precio_articulo, imagenes_articulo, likes_articulo, etiqueta_articulo, "createdAt", "updatedAt") 
-VALUES ('Quesillo', '5-12-2024', 'Es un 4', 15, 'doioi', 6, 'Producto', NOW(), NOW());
-INSERT INTO public."articulos" (nombre_articulo, fecha_caducidad_articulo, descripcion_articulo, precio_articulo, imagenes_articulo, likes_articulo, etiqueta_articulo, "createdAt", "updatedAt") 
-VALUES ('Leche descremada', '6-12-2024', 'Es un 5', 16, 'edksjdskhd', 3, 'Producto', NOW(), NOW());
+INSERT INTO public."Productos" (precio_producto, id_articulo) 
+VALUES (12, 1);
+INSERT INTO public."Productos" (precio_producto, id_articulo) 
+VALUES (13, 2);
+INSERT INTO public."Productos" (precio_producto, id_articulo) 
+VALUES (14, 3);
+INSERT INTO public."Productos" (precio_producto, id_articulo) 
+VALUES (15, 4);
+
+--Llenado de tabla Usuario_Articulos
+INSERT INTO public."Usuario_Articulos" (id_articulo, id_usuario) 
+VALUES (1, 1);
+INSERT INTO public."Usuario_Articulos" (id_articulo, id_usuario) 
+VALUES (2, 2);
+INSERT INTO public."Usuario_Articulos" (id_articulo, id_usuario) 
+VALUES (3, 3);
+INSERT INTO public."Usuario_Articulos" (id_articulo, id_usuario) 
+VALUES (4, 4);

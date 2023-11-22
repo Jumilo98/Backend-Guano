@@ -24,6 +24,7 @@ export const getArticuloById = async (req, res) => {
       if (!oneArticulo)
         return res.status(404).json({ message: "Articulo no registrado" });
       res.json(oneArticulo);
+      
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
@@ -36,7 +37,7 @@ export const createArticulo = async (req, res) => {
     try {
         // Creando un nuevo objeto articulo con el metodo create
         const nuevoArticulo =  await Articulo.create({
-            nombre_articulo: nombres,            
+            nombres_articulo: nombres,            
             etiqueta_articulo: etiqueta,
             descripcion_articulo: descripcion,
             likes_articulo: likes,
@@ -57,7 +58,7 @@ export const updateArticulo = async (req, res) => {
       const articuloActualizado = await Articulo.findOne({
         where: { id_articulo }
       });
-      articuloActualizado.nombre_articulo = newNombre;
+      articuloActualizado.nombres_articulo = newNombre;
       articuloActualizado.etiqueta_articulo= newEtiqueta;
       articuloActualizado.descripcion_articulo  = newDescripcion;
       articuloActualizado.likes_articulo= newLikes;
@@ -71,10 +72,10 @@ export const updateArticulo = async (req, res) => {
   // Borrar un articulo
   export const deleteArticulo = async (req, res) => {
     try {
-      const { id } = req.params;
+      const { id_articulo } = req.params;
       await Articulo.destroy({
         where: {
-          id_articulo: id,
+          id_articulo: id_articulo,
         },
       });
       res.sendStatus(204);

@@ -5,10 +5,10 @@ const router =  Router ();
 
 
 //Rutas de conexion al controlador usuario
-router.get('/administradores', getAllUsuarios)
-router.post('/administrador', createUsuario)
-router.put('/administrador/:id', updateUsuario)
-router.delete('/administrador/:id', deleteUsuario)
-router.get('/administrador/:id', getUsuarioById)
+router.get('/usuarios', getAllUsuarios)
+router.post('/usuario', createUsuario)
+router.put('/usuario/:id_usuario', updateUsuario)
+router.delete('/usuario/:id_usuario', deleteUsuario)
+router.get('/usuario/:id_usuario', getUsuarioById)
 
 export default router

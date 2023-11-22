@@ -65,10 +65,10 @@ export const updateProducto = async (req, res) => {
   // Borrar un producto
   export const deleteProducto = async (req, res) => {
     try {
-      const { id } = req.params;
+      const { id_producto } = req.params;
       await Producto.destroy({
         where: {
-          id_producto: id,
+          id_producto: id_producto,
         },
       });
       res.sendStatus(204);

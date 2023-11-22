@@ -7,8 +7,8 @@ const router =  Router ();
 //Rutas de conexion al controlador imagen
 router.get('/imagenes', getAllImagenes)
 router.post('/imagen', createImagen)
-router.put('/imagen/:id', updateImagen)
-router.delete('/imagen/:id', deleteImagen)
-router.get('/imagen/:id', getImagenById)
+router.put('/imagen/:id_imagen', updateImagen)
+router.delete('/imagen/:id_imagen', deleteImagen)
+router.get('/imagen/:id_imagen', getImagenById)
 
 export default router
