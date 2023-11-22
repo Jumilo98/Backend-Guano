@@ -3,15 +3,17 @@ import "../Database/relaciones.js";
 import { Articulo } from "../Models/articulo.js";
 import { Imagen } from "../Models/imagen.js"
 
+import multer from 'multer';
+import {v2 as cloudinary} from 'cloudinary';
+import fs from 'fs';
+
+
+
 //CRUD basico para el modelo Imagen
 // Obtener la lista de imagenes 
 export const getAllImagenes = async (req, res) => {
     try {
-        const allImagenes =  await Imagen.findAll({include: [{
-            model: Articulo,
-            attributes: ["id_articulo"],
-            required: true,
-        }]});
+        const allImagenes =  await Imagen.findAll();
         res.json(allImagenes);
         console.log("Mostrando imagens resgistrados...");
     } catch (error) {
@@ -24,12 +26,7 @@ export const getImagenById = async (req, res) => {
     try {
       const { id_imagen } = req.params;
       const oneImagen = await Imagen.findOne({
-        where: { id_imagen},
-        include: [{
-          model: Articulo,
-          attributes: ["id_articulo"],
-          required: true,
-      }]
+        where: { id_imagen}
       });
       if (!oneImagen)
         return res.status(404).json({ message: "Imagen no registrado" });
@@ -39,40 +36,64 @@ export const getImagenById = async (req, res) => {
     }
   };
 
+  // Configuración de Multer
+  const upload = multer({
+    dest: 'uploads/',
+    limits: {
+      fileSize: 50 * 1024 * 1024, // Limita el tamaño del archivo a 50 MB
+    },
+  });
 
-export const createImagen  = async (req, res) => {
+  export const createImagen = async (req, res) => {
 
-    // Espera recibir un paramentro "nombre" para crear el imagen
-    const { url, cloudinary } = req.body;
     const articulo = req.params.id_articulo; // Accede al id_articulo de los parámetros de la ruta
 
-    try {
-        // Creando un nuevo imagen con el metodo create
-        const nuevoImagen =  await Imagen.create({
-            url_imagen: url,
-            id_imagen_cloudinary: cloudinary,
-            id_articulo: articulo
-        });
-        res.json(nuevoImagen);
-        console.log("Nuevo imagen creado");
-        console.log("Nuevo imagen creado asociado al artículo ID:", articulo);
-    } catch (error) {
-        return res.status(500).json({message:error.message});
-    }   
+    // Multer procesará el archivo
+    upload.single('imagen')(req, res, async (err) => {
+        if (err) {
+            return res.status(500).json({ message: err.message });
+        }
+
+        // Asegúrate de que un archivo ha sido cargado
+        if (!req.file) {
+            return res.status(400).send('No se encontró ningún archivo para cargar.');
+        }
+
+        try {
+            // Sube el archivo a Cloudinary
+            const result = await cloudinary.uploader.upload(req.file.path);
+
+            // Elimina el archivo subido del sistema de archivos local después de subirlo a Cloudinary
+            fs.unlinkSync(req.file.path);
+
+            // Crea un nuevo imagen
+            const nuevoImagen = await Imagen.create({
+                url_imagen: result.secure_url,
+                id_imagen_cloudinary: result.public_id,
+                id_articulo: articulo
+            });
+
+            // Envía la respuesta
+            console.log("Nuevo imagen creado");
+            console.log("Nuevo imagen creado asociado al artículo ID:", articulo);
+            res.json({ url: result.secure_url 
+                , cloudinary: result.public_id 
+            });
+        } catch (error) {
+            if (req.file) fs.unlinkSync(req.file.path);
+            res.status(500).json({ message: error.message });
+        }
+    });
 };
 
 // Actualizar un imagen
 export const updateImagen = async (req, res) => {
+  
     try {
       const { id_imagen } = req.params;
       const { newUrl, newCloudinary } = req.body;
       const imagenActualizado = await Imagen.findOne({
-        where: { id_imagen },
-        include: [{
-          model: Articulo,
-          attributes: ["id_articulo"],
-          required: true,
-      }]
+        where: { id_imagen }
       });
       imagenActualizado.url_imagen = newUrl;
       imagenActualizado.id_imagen_cloudinary  = newCloudinary;
