@@ -88,20 +88,44 @@ export const getImagenById = async (req, res) => {
 
 // Actualizar un imagen
 export const updateImagen = async (req, res) => {
-  
-    try {
-      const { id_imagen } = req.params;
-      const { newUrl, newCloudinary } = req.body;
-      const imagenActualizado = await Imagen.findOne({
-        where: { id_imagen }
-      });
-      imagenActualizado.url_imagen = newUrl;
-      imagenActualizado.id_imagen_cloudinary  = newCloudinary;
-      await imagenActualizado.save();
-      res.json(imagenActualizado);
-    } catch (error) {
-      return res.status(500).json({ message: error.message });
-    }
+    
+    // Multer procesará el archivo
+    upload.single('imagen')(req, res, async (err) => {
+        if (err) {
+            return res.status(500).json({ message: err.message});
+        }
+
+        // Asegúrate de que un archivo ha sido cargado
+        if (!req.file) {
+            return res.status(400).send('No se encontró ningún archivo para cargar.');
+        }
+
+        try {
+            // Sube el archivo a Cloudinary
+            const result = await cloudinary.uploader.upload(req.file.path);
+
+           
+            // Crea un nuevo imagen
+            const { id_imagen } = req.params;
+
+            const imagenActualizado = await Imagen.findOne({
+              where: { id_imagen }
+            });
+            imagenActualizado.url_imagen = result.secure_url;
+            imagenActualizado.id_imagen_cloudinary  = result.public_id;
+            await imagenActualizado.save();
+            res.json(imagenActualizado);
+
+            // Envía la respuesta
+            console.log("Nuevo imagen actualizada");
+            res.json({ url: result.secure_url 
+                , cloudinary: result.public_id 
+            });
+        } catch (error) {
+            if (req.file) fs.unlinkSync(req.file.path);
+            res.status(500).json({ message: error.message });
+        }
+    });    
   };
   
   // Borrar un producto

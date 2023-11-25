@@ -30,13 +30,15 @@ export const getProductoById = async (req, res) => {
 
 
 export const createProducto  = async (req, res) => {
-
+    const articulo = req.params.id_articulo; // Accede al id_articulo de los parámetros de la ruta
+    
     // Espera recibir un paramentro "precio" para crear el producto
     const { precio } = req.body;
     try {
         // Creando un nuevo objeto producto con el metodo create
         const nuevoProducto =  await Producto.create({
             precio_producto: precio,
+            id_articulo: articulo
         });
         res.json(nuevoProducto);
         console.log("Nuevo producto creado");
