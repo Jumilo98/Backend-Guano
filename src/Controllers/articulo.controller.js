@@ -1,6 +1,8 @@
+import { sequelize } from "../Database/db.js";
 import "../Database/relaciones.js";
 import { Articulo } from "../Models/articulo.js"
 import { Imagen } from "../Models/imagen.js";
+import { Producto } from "../Models/producto.js";
 
 
 //CRUD basico para el modelo Articulo
@@ -8,7 +10,12 @@ import { Imagen } from "../Models/imagen.js";
 // Obtener la lista de articulos 
 export const getAllArticulos  = async (req, res) => {
     try {
-        const allArticulos =  await Articulo.findAll({include: Imagen});
+        const allArticulos =  await Articulo.findAll({
+          include: [Producto, Imagen],
+          limit:10, 
+          offset:0, 
+          order: [['updatedAt','DESC'],]
+        });
         res.json(allArticulos);
         console.log("Mostrando articulos registrados...");
     } catch (error) {
