@@ -1,12 +1,14 @@
 import "../Database/relaciones.js";
 import { Articulo } from "../Models/articulo.js"
+import { Imagen } from "../Models/imagen.js";
+
 
 //CRUD basico para el modelo Articulo
 
 // Obtener la lista de articulos 
 export const getAllArticulos  = async (req, res) => {
     try {
-        const allArticulos =  await Articulo.findAll();
+        const allArticulos =  await Articulo.findAll({include: Imagen});
         res.json(allArticulos);
         console.log("Mostrando articulos registrados...");
     } catch (error) {
