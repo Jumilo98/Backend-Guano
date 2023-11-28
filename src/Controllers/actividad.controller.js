@@ -43,13 +43,13 @@ export const createArticulo = async (req, res) => {
             etiqueta_articulo: etiqueta,
             descripcion_articulo: descripcion,
             likes_articulo: likes,
+            //id_etiqueta
         });
         res.json(nuevoArticulo);
         console.log("Nuevo Articulo creado");
     } catch (error) {
         return res.status(500).json({message:error.message});
     }
-   
 };
 
 // Actualizar un articulo

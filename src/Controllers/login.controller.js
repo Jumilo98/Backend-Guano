@@ -1,7 +1,6 @@
 import { Usuario } from "../Models/usuario.js";
 import { sendEmail } from "../services/email.js";
 
-
 export const verificarUsuario = async (req, res) => {
     const {email, contrasenia} = req.body;
 
@@ -16,7 +15,7 @@ export const verificarUsuario = async (req, res) => {
         if (! usuarioEncontrado) 
             return res.status(404).json({message: "Usuario no registrado"});
         
-        if (usuarioEncontrado.contrasenia_usuario != password) {
+        if (usuarioEncontrado.contrasenia_usuario != contrasenia) {
             return res.status(403).json({message: "Contraseña incorrecta"});
         } else {
             res.json({error: null, data: 'Bienvenido'})
