@@ -1,11 +1,11 @@
 import "../Database/relaciones.js";
-import { Articulo } from "../Models/articulo.js"
+import { Actividades } from "../Models/actividad.js"
 import { Imagen } from "../Models/imagen.js";
 
 
-//CRUD basico para el modelo Articulo
+//CRUD basico para el modelo Actividades
 
-// Obtener la lista de articulos 
+// Obtener la lista de Actividades 
 export const getAllArticulos  = async (req, res) => {
     try {
         const allArticulos =  await Articulo.findAll({include: Imagen});

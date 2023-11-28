@@ -19,7 +19,7 @@ export const getAllImagenes = async (req, res) => {
     } catch (error) {
         return res.status(500).json({message:error.message});
     }
-};
+};l
 
 // Obtener un imagen en especifico 
 export const getImagenById = async (req, res) => {

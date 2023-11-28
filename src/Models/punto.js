@@ -2,31 +2,25 @@ import { DataTypes } from "sequelize"
 import { sequelize }  from "../Database/db.js"
 
 
-export const Articulo = sequelize.define('Articulos', {
-
-    id_articulo: {
+export const Punto = sequelize.define('Puntos', {
+    id_punto: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         unique: true,
         autoIncrement: true
     },
-
-    nombres_articulo: {
+    nombres_punto: {
         type: DataTypes.STRING(50),
     },
-    
-    etiqueta_articulo:{
+    etiqueta_punto:{
         type: DataTypes.STRING(50),
     },
-   
-    descripcion_articulo: {
+    descripcion_punto: {
         type: DataTypes.STRING(500),
     },
-
-    likes_articulo: {
+    likes_punto: {
         type: DataTypes.INTEGER,
     },
-    
 }, {
     timestamps: true
 });

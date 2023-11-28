@@ -6,9 +6,9 @@ import { Usuario } from "../Models/usuario.js";
 //import { Empleado } from "../models/empleado.js";
 //import { Accidente } from "../models/accidente.js"
 //import { Formulario } from "../Models/formulario.js";
-import { Articulo } from "../Models/articulo.js";
+import { Articulo } from "../Models/punto.js";
 import { Imagen } from "../Models/imagen.js";
-import { Producto } from "../Models/producto.js";
+import { Producto } from "../Models/etiqueta.js";
 
 import { DataTypes } from "sequelize"
 import { sequelize }  from "../Database/db.js"

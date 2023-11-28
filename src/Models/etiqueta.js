@@ -1,18 +1,15 @@
 import { DataTypes } from "sequelize"
 import { sequelize }  from "../Database/db.js"
 
-export const Imagen = sequelize.define('Imagenes', {
-    id_imagen: {
+export const Etiqueta = sequelize.define('Etiquetas', {
+    id_etiqueta: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         unique: true,
         autoIncrement: true
     },
-    url_imagen: {
-        type: DataTypes.STRING(100),
-    },
-    id_imagen_cloudinary: {
-        type: DataTypes.STRING(100),
+    nombre_etiqueta: {
+        type: DataTypes.string(100),
     },
 }, {
     timestamps: false
