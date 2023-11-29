@@ -1,33 +1,74 @@
 //importar los modelas y sus relaciones
 import "../Database/relaciones.js";
-import { Punto } from "../Models/punto.js";
 import { Imagen } from "../Models/imagen.js"
+import { Punto } from "../Models/punto.js";
+import { Producto } from "../Models/producto.js";
 
 import multer from 'multer';
 import {v2 as cloudinary} from 'cloudinary';
 import fs from 'fs';
 
-
-
 //CRUD basico para el modelo Imagen
-// Obtener la lista de imagenes 
-export const getAllImagenes = async (req, res) => {
-    try {
-        const allImagenes =  await Imagen.findAll();
+// Obtener la lista de imagenes de productos
+export const getAllImagenesPr = async (req, res) => {
+  const pagina = parseInt(req.query.pagina) || 1; // Obtiene el número de página desde la consulta, por defecto es 1
+    const limite = 8;
+    const offsetdinamic = (pagina - 1) * limite;  
+  try {
+        const allImagenes =  await Imagen.findAndCountAll({
+          include: [
+            { model: Producto,
+              attibutes: ['nombre_producto']
+            }
+          ],
+          order: [
+            ['id_imagen', 'DESC']
+          ],
+          limit: limite,
+          offset:offsetdinamic 
+        });  
         res.json(allImagenes);
-        console.log("Mostrando imagens resgistrados...");
     } catch (error) {
         return res.status(500).json({message:error.message});
     }
 };
 
-// Obtener un imagen en especifico 
-export const getImagenById = async (req, res) => {
-    try {
-      const { id_imagen } = req.params;
-      const oneImagen = await Imagen.findOne({
-        where: { id_imagen}
+// Obtener la lista de imagenes de puntos
+export const getAllImagenesP = async (req, res) => {
+  const pagina = parseInt(req.query.pagina) || 1; // Obtiene el número de página desde la consulta, por defecto es 1
+  const limite = 8;
+  const offsetdinamic = (pagina - 1) * limite;
+  try {
+      const allImagenes =  await Imagen.findAndCountAll({
+        include: [
+          { model: Punto,
+            attibutes: ['nombre_punto']
+        }
+        ],
+        order: [
+          ['id_imagen', 'DESC']
+        ],
+        limit: limite,
+        offset:offsetdinamic 
       });
+      res.json(allImagenes);
+  } catch (error) {
+      return res.status(500).json({message:error.message});
+  }
+};
+
+// Obtener un imagen en especifico de productos
+export const getImagenPrById = async (req, res) => {
+    try {
+      const { id_imagen, id_producto } = req.params;
+      const oneImagen = await Imagen.findByPk(id_imagen,{
+        include: [
+          { model: Producto,
+            attibutes: ['nombre_producto']
+          }
+        ]
+      });
+      id_producto
       if (!oneImagen)
         return res.status(404).json({ message: "Imagen no registrado" });
       res.json(oneImagen);
@@ -36,6 +77,25 @@ export const getImagenById = async (req, res) => {
     }
   };
 
+// Obtener un imagen en especifico de puntos
+export const getImagenPById = async (req, res) => {
+  try {
+    const { id_imagen, id_punto } = req.params;
+    const oneImagen = await Imagen.findByPk(id_imagen,{
+      include: [
+        { model: Punto ,
+          attibutes: ['nombre_punto']
+        }
+      ]
+    });
+    id_punto 
+    if (!oneImagen)
+      return res.status(404).json({ message: "Imagen no registrado" });
+    res.json(oneImagen);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
   // Configuración de Multer
   const upload = multer({
     dest: 'uploads/',
@@ -43,101 +103,165 @@ export const getImagenById = async (req, res) => {
       fileSize: 50 * 1024 * 1024, // Limita el tamaño del archivo a 50 MB
     },
   });
-
-  export const createImagen = async (req, res) => {
-
-    const punto = req.params.id_punto; // Accede al id_articulo de los parámetros de la ruta
-
+  //Crea la imagen para un producto
+  export const createImagenPr = async (req, res) => {
+    const {id_producto} = req.params; // las foreign keys se les escribe tal y como son
     // Multer procesará el archivo
     upload.single('imagen')(req, res, async (err) => {
         if (err) {
             return res.status(500).json({ message: err.message });
         }
-
         // Asegúrate de que un archivo ha sido cargado
         if (!req.file) {
             return res.status(400).send('No se encontró ningún archivo para cargar.');
         }
-
         try {
             // Sube el archivo a Cloudinary
             const result = await cloudinary.uploader.upload(req.file.path);
-
             // Elimina el archivo subido del sistema de archivos local después de subirlo a Cloudinary
             fs.unlinkSync(req.file.path);
-
             // Crea un nuevo imagen
             const nuevoImagen = await Imagen.create({
                 url_imagen: result.secure_url,
                 id_imagen_cloudinary: result.public_id,
-                id_punto: punto
+                id_producto: id_producto
             });
-
             // Envía la respuesta
-            console.log("Nuevo imagen creado");
-            console.log("Nuevo imagen creado asociado al artículo ID:", articulo);
-            res.json({ url: result.secure_url 
-                , cloudinary: result.public_id 
-            });
+            console.log("Nuevo imagen creado asociado al producto ID:", id_producto);
+            res.json( nuevoImagen);
         } catch (error) {
             if (req.file) fs.unlinkSync(req.file.path);
             res.status(500).json({ message: error.message });
         }
     });
 };
+ //Crea la imagen para un punto
+export const createImagenP = async (req, res) => {
+  const {id_punto} = req.params; // Accede al id_articulo de los parámetros de la ruta
+  // Multer procesará el archivo
+  upload.single('imagen')(req, res, async (err) => {
+      if (err) {
+          return res.status(500).json({ message: err.message });
+      }
+      // Asegúrate de que un archivo ha sido cargado
+      if (!req.file) {
+          return res.status(400).send('No se encontró ningún archivo para cargar.');
+      }
+      try {
+          // Sube el archivo a Cloudinary
+          const result = await cloudinary.uploader.upload(req.file.path);
+          // Elimina el archivo subido del sistema de archivos local después de subirlo a Cloudinary
+          fs.unlinkSync(req.file.path);
+          // Crea un nuevo imagen
+          const nuevoImagen = await Imagen.create({
+              url_imagen: result.secure_url,
+              id_imagen_cloudinary: result.public_id,
+              id_punto: id_punto
+          });
+          // Envía la respuesta
+          console.log("Nuevo imagen creado asociado al artículo ID:", id_punto);
+          res.json(nuevoImagen);
+      } catch (error) {
+          if (req.file) fs.unlinkSync(req.file.path);
+          res.status(500).json({ message: error.message });
+      }
+  });
+};
 
-// Actualizar un imagen
-export const updateImagen = async (req, res) => {
-    
-    // Multer procesará el archivo
+// Actualizar un imagen para producto
+export const updateImagenPr = async (req, res) => {
+  const { id_imagen, id_producto } = req.params;  
+  // Multer procesará el archivo
     upload.single('imagen')(req, res, async (err) => {
         if (err) {
             return res.status(500).json({ message: err.message});
         }
-
         // Asegúrate de que un archivo ha sido cargado
         if (!req.file) {
             return res.status(400).send('No se encontró ningún archivo para cargar.');
         }
-
         try {
             // Sube el archivo a Cloudinary
             const result = await cloudinary.uploader.upload(req.file.path);
-
-           
             // Crea un nuevo imagen
-            const { id_imagen } = req.params;
-
             const imagenActualizado = await Imagen.findOne({
               where: { id_imagen }
             });
             imagenActualizado.url_imagen = result.secure_url;
             imagenActualizado.id_imagen_cloudinary  = result.public_id;
+            id_producto
             await imagenActualizado.save();
-            res.json(imagenActualizado);
-
             // Envía la respuesta
             console.log("Nuevo imagen actualizada");
-            res.json({ url: result.secure_url 
-                , cloudinary: result.public_id 
-            });
+            res.json(imagenActualizado);
         } catch (error) {
             if (req.file) fs.unlinkSync(req.file.path);
             res.status(500).json({ message: error.message });
         }
     });    
   };
-  
-  // Borrar un producto
-  export const deleteImagen = async (req, res) => {
+  // Actualizar un imagen para puntos
+export const updateImagenP = async (req, res) => {
+  const { id_imagen, id_punto } = req.params;
+  // Multer procesará el archivo
+  upload.single('imagen')(req, res, async (err) => {
+      if (err) {
+          return res.status(500).json({ message: err.message});
+      }
+      // Asegúrate de que un archivo ha sido cargado
+      if (!req.file) {
+          return res.status(400).send('No se encontró ningún archivo para cargar.');
+      }
+      try {
+          // Sube el archivo a Cloudinary
+          const result = await cloudinary.uploader.upload(req.file.path);
+          // Crea un nuevo imagen          
+          const imagenActualizado = await Imagen.findOne({
+            where: { id_imagen }
+          });
+          imagenActualizado.url_imagen = result.secure_url;
+          imagenActualizado.id_imagen_cloudinary  = result.public_id;
+          id_punto
+          await imagenActualizado.save();
+          // Envía la respuesta
+          console.log("Nuevo imagen actualizada");
+          res.json(imagenActualizado);
+      } catch (error) {
+          if (req.file) fs.unlinkSync(req.file.path);
+          res.status(500).json({ message: error.message });
+      }
+  });    
+};
+  // Borrar una imagen de producto
+  export const deleteImagenPr = async (req, res) => {
     try {
-      const { id_imagen } = req.params;
-      await Imagen.destroy({
+      const { id_imagen, id_producto } = req.params;
+     const imagenEliminado = await Imagen.destroy({
         where: {
           id_imagen: id_imagen,
         },
       });
-      res.sendStatus(204);
+      id_producto
+      if(await imagenEliminado.destroy()) {
+        res.status(200).json({mensaje: 'Imagen eliminado'}) 
+      }
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  };
+  // Borrar una imagen de puntos
+  export const deleteImagenP = async (req, res) => {
+    try {
+      const { id_imagen, id_punto } = req.params;
+      const imagenEliminado = await Imagen.destroy({
+        where: {
+          id_imagen: id_imagen,
+        },
+      });
+      id_punto
+      if(await imagenEliminado.destroy()) {
+        res.status(200).json({mensaje: 'Imagen eliminado'}) 
+      }
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }

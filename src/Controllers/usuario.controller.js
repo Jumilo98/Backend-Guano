@@ -1,12 +1,28 @@
 //importar los modelas y sus relaciones
 import "../Database/relaciones.js";
+import { Producto } from "../Models/producto.js";
+import { Punto } from "../Models/punto.js";
 import { Usuario } from "../Models/usuario.js"
 
 //CRUD basico para el modelo Usuario
 // Obtener la lista de usuarios
 export const getAllUsuarios = async (req, res) => {
+  const pagina = parseInt(req.query.pagina) || 1  ; // Obtiene el número de página desde la consulta, por defecto es 1
+  const limite = 8;
+  const offsetdinamic = (pagina - 1) * limite;
   try {
-    const allUsuarios= await Usuario.findAll();
+    const allUsuarios= await Usuario.findAndCountAll({
+      include: [
+        { model: Punto,
+          attibutes: ['nombre_punto']
+        }
+      ],
+      order: [
+        ['id_usuario', 'DESC']
+      ],
+      limit: limite,
+      offset:offsetdinamic 
+    });  
     res.json(allUsuarios);
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -73,7 +89,7 @@ export const deleteUsuario= async (req, res) => {
         id_usuario: id_usuario,
       },
     });
-    res.sendStatus(204);
+    res.status(200).json({mensaje: 'Usuario eliminado'}) 
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

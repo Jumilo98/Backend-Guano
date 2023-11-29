@@ -3,15 +3,12 @@ import { sendEmail } from "../services/email.js";
 
 export const verificarUsuario = async (req, res) => {
     const {email, contrasenia} = req.body;
-
     try {
-
         const usuarioEncontrado = await Usuario.findOne({
             where: {
                 email_usuario: email
             }
         });
-    
         if (! usuarioEncontrado) 
             return res.status(404).json({message: "Usuario no registrado"});
         
@@ -19,8 +16,7 @@ export const verificarUsuario = async (req, res) => {
             return res.status(403).json({message: "Contraseña incorrecta"});
         } else {
             res.json({error: null, data: 'Bienvenido'})
-        }
-        
+        }    
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
@@ -33,7 +29,6 @@ export const recuperarContrasenia = async (req, res) => {
             where: {
                 email_usuario: email
             }});
-
         const contrasenia = "Su contraseña es: " + usuarioEncontrado.contrasenia_usuario;
         const asunto = "Servicio de recuperación de contraseña para: " + usuarioEncontrado.nombres_usuario; 
         const mensaje = await sendEmail( asunto , contrasenia, email );
