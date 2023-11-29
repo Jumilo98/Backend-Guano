@@ -9,8 +9,10 @@ export const Etiqueta = sequelize.define('Etiquetas', {
         autoIncrement: true
     },
     nombre_etiqueta: {
-        type: DataTypes.string(100),
+        type: DataTypes.STRING(100),
+        allowNull: false
     },
 }, {
-    timestamps: false
+    timestamps: false,
+    freezeTableName: true
 });

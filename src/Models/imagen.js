@@ -15,5 +15,6 @@ export const Imagen = sequelize.define('Imagenes', {
         type: DataTypes.STRING(100),
     },
 }, {
-    timestamps: false
+    timestamps: false,
+    freezeTableName: true
 });

@@ -5,8 +5,10 @@ import cors from 'cors'
 import usuarioRoutes from './Routes/usuario.routes.js'
 import imagenRoutes from './Routes/imagen.routes.js'
 import productoRoutes from './Routes/producto.routes.js'
-import articuloRoutes from './Routes/articulo.routes.js'
+import puntoRoutes from './Routes/punto.routes.js'
 import loginRoutes from './Routes/login.routes.js'
+import comentarioRoutes from './Routes/comentario.routes.js'
+import etiquetaRoutes from './Routes/etiqueta.routes.js'
 
 import {v2 as cloudinary} from 'cloudinary';
 
@@ -41,9 +43,16 @@ app.use(imagenRoutes);
 //Rutas de acceso producto
 app.use(productoRoutes)
 
-//Rutas de acceso al articulo 
-app.use(articuloRoutes)
+//Rutas de acceso al punto 
+app.use(puntoRoutes)
 
+//Rutas de acceso al comentario 
+app.use(comentarioRoutes)
+
+//Rutas de acceso a la etiqueta 
+app.use(etiquetaRoutes)
+
+//Rutas de acceso al login
 app.use(loginRoutes)
 
 export default app;

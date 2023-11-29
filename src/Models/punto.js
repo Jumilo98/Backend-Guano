@@ -1,7 +1,6 @@
 import { DataTypes } from "sequelize"
 import { sequelize }  from "../Database/db.js"
 
-
 export const Punto = sequelize.define('Puntos', {
     id_punto: {
         type: DataTypes.INTEGER,
@@ -11,9 +10,8 @@ export const Punto = sequelize.define('Puntos', {
     },
     nombres_punto: {
         type: DataTypes.STRING(50),
-    },
-    etiqueta_punto:{
-        type: DataTypes.STRING(50),
+        allowNull: false,
+        unique: true
     },
     descripcion_punto: {
         type: DataTypes.STRING(500),
@@ -22,5 +20,6 @@ export const Punto = sequelize.define('Puntos', {
         type: DataTypes.INTEGER,
     },
 }, {
-    timestamps: true
+    timestamps: true,
+    freezeTableName: true
 });

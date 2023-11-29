@@ -1,14 +1,15 @@
 import "../Database/relaciones.js";
-import { Actividades } from "../Models/actividad.js"
-import { Imagen } from "../Models/imagen.js";
+import { Imagen } from "../Models/imagen.js"
+import { Punto } from "../Models/punto.js";
+import { Usuario } from "../Models/usuario.js";
 
 
 //CRUD basico para el modelo Actividades
 
 // Obtener la lista de Actividades 
-export const getAllArticulos  = async (req, res) => {
+export const getAllPuntos  = async (req, res) => {
     try {
-        const allArticulos =  await Articulo.findAll({include: Imagen});
+        const allArticulos =  await Punto.findAll({include: Imagen});
         res.json(allArticulos);
         console.log("Mostrando articulos registrados...");
     } catch (error) {
@@ -17,10 +18,10 @@ export const getAllArticulos  = async (req, res) => {
 };
 
 // Obtener un articulo en especifico 
-export const getArticuloById = async (req, res) => {
+export const getPuntoById = async (req, res) => {
     try {
       const { id_articulo } = req.params;
-      const oneArticulo = await Articulo.findOne({
+      const oneArticulo = await Punto.findOne({
         where: { id_articulo}
       });
       if (!oneArticulo)
@@ -33,12 +34,12 @@ export const getArticuloById = async (req, res) => {
   };
 
 //Crear un articulo
-export const createArticulo = async (req, res) => {
+export const createPunto = async (req, res) => {
     // Espera recibir un paramentro "nombre" para crear el articulo
     const { nombres, etiqueta, descripcion, likes } = req.body;
     try {
         // Creando un nuevo objeto articulo con el metodo create
-        const nuevoArticulo =  await Articulo.create({
+        const nuevoArticulo =  await Punto.create({
             nombres_articulo: nombres,            
             etiqueta_articulo: etiqueta,
             descripcion_articulo: descripcion,
@@ -53,11 +54,11 @@ export const createArticulo = async (req, res) => {
 };
 
 // Actualizar un articulo
-export const updateArticulo = async (req, res) => {
+export const updatePunto = async (req, res) => {
     try {
       const { id_articulo } = req.params;
       const { newNombre, newEtiqueta, newDescripcion, newLikes } = req.body;
-      const articuloActualizado = await Articulo.findOne({
+      const articuloActualizado = await Punto.findOne({
         where: { id_articulo }
       });
       articuloActualizado.nombres_articulo = newNombre;
@@ -72,10 +73,10 @@ export const updateArticulo = async (req, res) => {
   };
   
   // Borrar un articulo
-  export const deleteArticulo = async (req, res) => {
+  export const deletePunto = async (req, res) => {
     try {
       const { id_articulo } = req.params;
-      await Articulo.destroy({
+      await Punto.destroy({
         where: {
           id_articulo: id_articulo,
         },

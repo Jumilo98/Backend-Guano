@@ -9,8 +9,9 @@ export const Comentario = sequelize.define('Comentarios', {
         autoIncrement: true
     },
     mensaje_comentario: {
-        type: DataTypes.STRING(500),
+        type: DataTypes.TEXT
     },
 }, {
-    timestamps: false
+    timestamps: false,
+    freezeTableName: true
 });

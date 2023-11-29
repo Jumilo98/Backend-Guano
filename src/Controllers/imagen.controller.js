@@ -1,7 +1,8 @@
 //importar los modelas y sus relaciones
 import "../Database/relaciones.js";
-import { Articulo } from "../Models/articulo.js";
-import { Imagen } from "../Models/imagen.js"
+import { Punto } from "../Models/punto.js";
+import { Producto } from "../Models/producto.js";
+import { Imagen } from "../Models/imagen.js";
 
 import multer from 'multer';
 import {v2 as cloudinary} from 'cloudinary';
@@ -19,12 +20,12 @@ export const getAllImagenes = async (req, res) => {
     } catch (error) {
         return res.status(500).json({message:error.message});
     }
-};l
+};
 
 // Obtener un imagen en especifico 
 export const getImagenById = async (req, res) => {
     try {
-      const { id_imagen } = req.params;
+      const { id_punto, id_producto, id_imagen } = req.params;
       const oneImagen = await Imagen.findOne({
         where: { id_imagen}
       });
@@ -46,7 +47,7 @@ export const getImagenById = async (req, res) => {
 
   export const createImagen = async (req, res) => {
 
-    const articulo = req.params.id_articulo; // Accede al id_articulo de los parámetros de la ruta
+    const id = req.body; // Accede al id del producto o punto de los parámetros de la ruta
 
     // Multer procesará el archivo
     upload.single('imagen')(req, res, async (err) => {
@@ -70,7 +71,7 @@ export const getImagenById = async (req, res) => {
             const nuevoImagen = await Imagen.create({
                 url_imagen: result.secure_url,
                 id_imagen_cloudinary: result.public_id,
-                id_articulo: articulo
+                id: id
             });
 
             // Envía la respuesta
@@ -88,7 +89,10 @@ export const getImagenById = async (req, res) => {
 
 // Actualizar un imagen
 export const updateImagen = async (req, res) => {
-    
+
+  const producto = req.params.id_producto; // Accede al id_producto de los parámetros de la ruta
+  const punto = req.params.id_punto; // Accede al id_punto de los parámetros de la ruta
+  
     // Multer procesará el archivo
     upload.single('imagen')(req, res, async (err) => {
         if (err) {

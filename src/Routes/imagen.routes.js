@@ -3,12 +3,11 @@ import { getAllImagenes, getImagenById , createImagen , updateImagen , deleteIma
 
 const router =  Router ();
 
-
 //Rutas de conexion al controlador imagen
-router.get('/imagenes', getAllImagenes)
-router.post('/imagen/:id', createImagen);//id del producto/punto
-router.put('/imagen/:id', updateImagen)//id de la imagen
-router.delete('/imagen/:id', deleteImagen)//id de la imagen
-router.get('/imagen/:id', getImagenById)//id de la imagen
+router.get('/imagenes', getAllImagenes);
+router.post('/imagen/', createImagen);
+router.put('/imagen/:id/:id', updateImagen);//id del producto o punto y //id de la imagen
+router.delete('/imagen/:id', deleteImagen);//id de la imagen
+router.get('/imagen/:id/:id', getImagenById);//id del producto o punto y //id de la imagen
 
 export default router
