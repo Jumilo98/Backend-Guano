@@ -1,53 +1,121 @@
 import "../Database/relaciones.js";
-import { Imagen } from "../Models/imagen.js"
 import { Punto } from "../Models/punto.js";
+import { Imagen } from "../Models/imagen.js"
 import { Usuario } from "../Models/usuario.js";
+import { Comentario } from "../Models/comentario.js";
+import { Etiqueta } from "../Models/etiqueta.js";
 
-
-//CRUD basico para el modelo Actividades
-
-// Obtener la lista de Actividades 
+//CRUD basico para el modelo Punto
+// Obtener la lista de puntos por id 
 export const getAllPuntos  = async (req, res) => {
-    try {
-        const allArticulos =  await Punto.findAll({include: Imagen});
-        res.json(allArticulos);
-        console.log("Mostrando articulos registrados...");
+  const pagina = parseInt(req.query.pagina) || 1  ; // Obtiene el número de página desde la consulta, por defecto es 1
+  const limite = 8;
+  const offsetdinamic = (pagina - 1) * limite;  
+  try {
+    const allPuntos =  await Punto.findAndCountAll({
+      include: [
+        { model: Usuario,
+          attibutes: ['email_usuario']
+        },
+        { model: Etiqueta,
+          attibutes: ['id_etiqueta']
+        },
+        { model: Imagen,
+          attibutes: ['id_imagen']
+        },
+        { model: Comentario,
+          attibutes: ['id_comentario']
+        }
+      ],
+      order: [
+      ['id_punto', 'DESC']
+    ],
+    limit: limite,
+    offset:offsetdinamic 
+  });  
+  res.json(allPuntos);
     } catch (error) {
         return res.status(500).json({message:error.message});
     }
 };
 
 // Obtener un articulo en especifico 
+export const getPuntoByName = async (req, res) => {
+  try {
+    const { nombres_punto } = req.params;
+    const onePunto = await Punto.findAll(nombres_punto,{
+      include: [
+        { model: Usuario,
+          attibutes: ['email_usuario']
+        },
+        { model: Etiqueta,
+          attibutes: ['id_etiqueta']
+        },
+        { model: Imagen,
+          attibutes: ['id_imagen']
+        },
+        { model: Comentario,
+          attibutes: ['id_comentario']
+        }
+      ],
+      order: [
+      ['nombres_punto', 'DESC']
+    ],
+    });
+    if (!onePunto)
+      return res.status(404).json({ message: "Punto no registrado" });
+    res.json(oneProducto);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+// Obtener un articulo en especifico 
 export const getPuntoById = async (req, res) => {
     try {
-      const { id_articulo } = req.params;
-      const oneArticulo = await Punto.findOne({
-        where: { id_articulo}
-      });
-      if (!oneArticulo)
-        return res.status(404).json({ message: "Articulo no registrado" });
-      res.json(oneArticulo);
-      
-    } catch (error) {
-      return res.status(500).json({ message: error.message });
-    }
-  };
+      const { id_punto } = req.params;
+    const onePunto = await Punto.findAll(id_punto,{
+      include: [
+        { model: Usuario,
+          attibutes: ['email_usuario']
+        },
+        { model: Etiqueta,
+          attibutes: ['id_etiqueta']
+        },
+        { model: Imagen,
+          attibutes: ['id_imagen']
+        },
+        { model: Comentario,
+          attibutes: ['id_comentario']
+        }
+      ],
+      order: [
+      ['id_punto', 'DESC']
+    ],
+    });
+    if (!onePunto)
+      return res.status(404).json({ message: "Punto no registrado" });
+    res.json(oneProducto);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
-//Crear un articulo
+//Crear un punto
 export const createPunto = async (req, res) => {
-    // Espera recibir un paramentro "nombre" para crear el articulo
-    const { nombres, etiqueta, descripcion, likes } = req.body;
+    // Espera recibir un paramentro "nombre" para crear el punto
+    const { nombres, descripcion, likes, id_usuario, id_etiqueta } = req.body;
     try {
-        // Creando un nuevo objeto articulo con el metodo create
-        const nuevoArticulo =  await Punto.create({
-            nombres_articulo: nombres,            
-            etiqueta_articulo: etiqueta,
-            descripcion_articulo: descripcion,
-            likes_articulo: likes,
-            //id_etiqueta
+        // Creando un nuevo objeto punto con el metodo create
+        const nuevoPunto =  await Punto.create({
+            nombres_punto: nombres,    
+            descripcion_punto: descripcion,
+            likes_punto: likes,
+            id_usuario,
+            id_etiqueta
         });
-        res.json(nuevoArticulo);
-        console.log("Nuevo Articulo creado");
+        res.json(nuevoPunto);
+        console.log("Nuevo Punto creado");
     } catch (error) {
         return res.status(500).json({message:error.message});
     }
@@ -56,17 +124,23 @@ export const createPunto = async (req, res) => {
 // Actualizar un articulo
 export const updatePunto = async (req, res) => {
     try {
-      const { id_articulo } = req.params;
-      const { newNombre, newEtiqueta, newDescripcion, newLikes } = req.body;
-      const articuloActualizado = await Punto.findOne({
-        where: { id_articulo }
+      const { id_punto } = req.params;
+      const { newNombre, newDescripcion, newLikes, id_usuario, id_etiqueta } = req.body;
+      const puntoActualizado = await Punto.findOne({
+        where: { id_punto }
       });
-      articuloActualizado.nombres_articulo = newNombre;
-      articuloActualizado.etiqueta_articulo= newEtiqueta;
-      articuloActualizado.descripcion_articulo  = newDescripcion;
-      articuloActualizado.likes_articulo= newLikes;
-      await articuloActualizado.save();
-      res.json(articuloActualizado);
+      // Validación
+      if(!puntoActualizado) {
+        return res.status(404).json({mensaje: 'Punto no encontrado'});
+       }
+      puntoActualizado.nombres_punto = newNombre;
+      puntoActualizado.descripcion_punto  = newDescripcion;
+      puntoActualizado.likes_punto= newLikes;
+      id_usuario;
+      id_etiqueta;
+      if(await puntoActualizado.save()) {
+        res.json(puntoActualizado); 
+      }
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
@@ -74,14 +148,16 @@ export const updatePunto = async (req, res) => {
   
   // Borrar un articulo
   export const deletePunto = async (req, res) => {
-    try {
-      const { id_articulo } = req.params;
-      await Punto.destroy({
+    const { id_punto } = req.params;
+    try {      
+      const puntoEliminado =  await Punto.destroy({
         where: {
-          id_articulo: id_articulo,
+          id_punto: id_punto,
         },
       });
-      res.sendStatus(204);
+      if(await puntoEliminado.destroy()) {
+        res.status(200).json({mensaje: 'Punto eliminado'}) 
+      }
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }

@@ -72,12 +72,12 @@ export const updateEtiqueta = async (req, res) => {
         where: { id_etiqueta }
       });
       // Validación
-      if(!comentarioActualizado) {
+      if(!etiquetaActualizado) {
         return res.status(404).json({mensaje: 'Comentario no encontrado'});
        }
       etiquetaActualizado.nombre_etiqueta = newNombre;
       id_punto
-      if(await comentarioActualizado.save()) {
+      if(await etiquetaActualizado.save()) {
         res.json(etiquetaActualizado);
       }
     } catch (error) {

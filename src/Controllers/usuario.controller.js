@@ -1,7 +1,5 @@
 //importar los modelas y sus relaciones
 import "../Database/relaciones.js";
-import { Producto } from "../Models/producto.js";
-import { Punto } from "../Models/punto.js";
 import { Usuario } from "../Models/usuario.js"
 
 //CRUD basico para el modelo Usuario
@@ -12,12 +10,7 @@ export const getAllUsuarios = async (req, res) => {
   const offsetdinamic = (pagina - 1) * limite;
   try {
     const allUsuarios= await Usuario.findAndCountAll({
-      include: [
-        { model: Punto,
-          attibutes: ['nombre_punto']
-        }
-      ],
-      order: [
+        order: [
         ['id_usuario', 'DESC']
       ],
       limit: limite,
@@ -33,9 +26,7 @@ export const getAllUsuarios = async (req, res) => {
 export const getUsuarioById = async (req, res) => {
   try {
     const { id_usuario } = req.params;
-    const oneUsuario = await Usuario.findOne({
-      where: { id_usuario}
-    });
+    const oneUsuario = await Usuario.findByPk(id_usuario);
     if (!oneUsuario)
       return res.status(404).json({ message: "Usuario no registrado" });
     res.json(oneUsuario);
@@ -54,8 +45,8 @@ export const createUsuario = async (req, res) => {
       email_usuario: email,
       contrasenia_usuario: contrasenia
     });
-    res.json(nuevoUsuario);
     console.log("Nuevo Usuario Registrado");
+    res.json(nuevoUsuario);   
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -69,12 +60,17 @@ export const updateUsuario = async (req, res) => {
     const usuarioActualizado = await Usuario.findOne({
       where: { id_usuario }
     });
+     // Validación
+     if(!usuarioActualizado) {
+      return res.status(404).json({mensaje: 'Comentario no encontrado'});
+     }
     usuarioActualizado.nombres_usuario = newNombres;
     usuarioActualizado.apellidos_usuario  = newApellidos;
     usuarioActualizado.email_usuario  = newEmail;
     usuarioActualizado.contrasenia_usuario  = newContrasenia;
-    await usuarioActualizado.save();
-    res.json(usuarioActualizado);
+    if(await usuarioActualizado.save()) {
+      res.json(usuarioActualizado);
+    }
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -84,12 +80,14 @@ export const updateUsuario = async (req, res) => {
 export const deleteUsuario= async (req, res) => {
   try {
     const { id_usuario } = req.params;
-    await Usuario.destroy({
+    const usuarioEliminado = await Usuario.destroy({
       where: {
         id_usuario: id_usuario,
       },
     });
-    res.status(200).json({mensaje: 'Usuario eliminado'}) 
+    if(await usuarioEliminado.destroy()) {
+      res.status(200).json({mensaje: 'Usuario eliminado'}) 
+    }
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

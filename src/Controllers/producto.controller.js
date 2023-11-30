@@ -1,32 +1,91 @@
 import "../Database/relaciones.js";
-import { Imagen } from "../Models/imagen.js"
 import { Producto } from "../Models/producto.js";
+import { Comentario } from "../Models/comentario.js";
+import { Imagen } from "../Models/imagen.js";
 import { Usuario } from "../Models/usuario.js";
 
-//CRUD basico para el modelo Imagen
-
-// Obtener la lista de Actividades 
+//CRUD basico para el modelo producto
+// Obtener la lista de productos por id
 export const getAllProductos  = async (req, res) => {
-    try {
-        const allArticulos =  await Producto.findAll({include: Imagen});
-        res.json(allArticulos);
-        console.log("Mostrando articulos registrados...");
+  const pagina = parseInt(req.query.pagina) || 1  ; // Obtiene el número de página desde la consulta, por defecto es 1
+  const limite = 8;
+  const offsetdinamic = (pagina - 1) * limite;  
+  try {
+        const allProductos =  await Producto.findAndCountAll({
+          include: [
+            { model: Usuario,
+              attibutes: ['email_usuario']
+            },
+            { model: Imagen,
+              attibutes: ['id_imagen']
+            },
+            { model: Comentario,
+              attibutes: ['id_comentario']
+            }
+          ],
+          order: [
+          ['id_producto', 'DESC']
+        ],
+        limit: limite,
+        offset:offsetdinamic 
+      });  
+      res.json(allProductos);
     } catch (error) {
         return res.status(500).json({message:error.message});
     }
 };
 
-// Obtener un articulo en especifico 
+// Obtener un proucto en especifico por nombre 
+export const getProductoByName = async (req, res) => {
+  try {
+    const { nombres_producto } = req.params;
+    const oneProducto = await Producto.findAll(nombres_producto,{
+      include: [
+        { model: Usuario,
+          attibutes: ['email_usuario']
+        },
+        { model: Imagen,
+          attibutes: ['id_imagen']
+        },
+        { model: Comentario,
+          attibutes: ['id_comentario']
+        }
+      ],
+      order: [
+      ['nombres_producto', 'DESC']
+    ],
+    });
+    if (!oneProducto)
+      return res.status(404).json({ message: "Producto no registrado" });
+    res.json(oneProducto);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+// Obtener un articulo en especifico por id
 export const getProductoById = async (req, res) => {
     try {
-      const { id_articulo } = req.params;
-      const oneArticulo = await Producto.findOne({
-        where: { id_articulo}
+      const { id_producto } = req.params;
+      const oneProducto = await Producto.findOne(id_producto,{
+        include: [
+          { model: Usuario,
+            attibutes: ['email_usuario']
+          },
+          { model: Imagen,
+            attibutes: ['id_imagen']
+          },
+          { model: Comentario,
+            attibutes: ['id_comentario']
+          }
+        ],
+        order: [
+        ['id_producto', 'DESC']
+      ],
       });
-      if (!oneArticulo)
-        return res.status(404).json({ message: "Articulo no registrado" });
-      res.json(oneArticulo);
-      
+      if (!oneProducto)
+        return res.status(404).json({ message: "Producto no registrado" });
+      res.json(oneProducto);
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
@@ -35,37 +94,45 @@ export const getProductoById = async (req, res) => {
 //Crear un articulo
 export const createProducto = async (req, res) => {
     // Espera recibir un paramentro "nombre" para crear el articulo
-    const { nombres, etiqueta, descripcion, likes } = req.body;
+    const { nombres, etiqueta, precio, descripcion, likes, id_usuario } = req.body;
     try {
-        // Creando un nuevo objeto articulo con el metodo create
-        const nuevoArticulo =  await Producto.create({
-            nombres_articulo: nombres,            
-            etiqueta_articulo: etiqueta,
-            descripcion_articulo: descripcion,
-            likes_articulo: likes,
-            //id_etiqueta
+        // Creando un nuevo objeto producto con el metodo create
+        const nuevoProducto =  await Producto.create({
+            nombres_producto: nombres,            
+            etiqueta_producto: etiqueta,
+            precio_producto: precio,
+            descripcion_producto: descripcion,
+            likes_producto: likes,
+            id_usuario
         });
-        res.json(nuevoArticulo);
-        console.log("Nuevo Articulo creado");
+        res.json(nuevoProducto);
+        console.log("Nuevo Producto creado");
     } catch (error) {
         return res.status(500).json({message:error.message});
     }
 };
 
-// Actualizar un articulo
+// Actualizar un producto
 export const updateProducto = async (req, res) => {
     try {
-      const { id_articulo } = req.params;
-      const { newNombre, newEtiqueta, newDescripcion, newLikes } = req.body;
-      const articuloActualizado = await Producto.findOne({
-        where: { id_articulo }
+      const { id_producto } = req.params;
+      const { newNombre, newEtiqueta, newPrecio, newDescripcion, newLikes, id_usuario } = req.body;
+      const productoActualizado = await Producto.findOne({
+        where: { id_producto }
       });
-      articuloActualizado.nombres_articulo = newNombre;
-      articuloActualizado.etiqueta_articulo= newEtiqueta;
-      articuloActualizado.descripcion_articulo  = newDescripcion;
-      articuloActualizado.likes_articulo= newLikes;
-      await articuloActualizado.save();
-      res.json(articuloActualizado);
+      // Validación
+      if(!productoActualizado) {
+        return res.status(404).json({mensaje: 'Producto no encontrado'});
+       }
+      productoActualizado.nombres_producto = newNombre;
+      productoActualizado.etiqueta_producto= newEtiqueta;
+      productoActualizado.precio_producto  = newPrecio;
+      productoActualizado.descripcion_producto  = newDescripcion;
+      productoActualizado.likes_producto= newLikes;
+      id_usuario;
+      if(await productoActualizado.save()) {
+        res.json(productoActualizado); 
+      }
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
@@ -73,14 +140,16 @@ export const updateProducto = async (req, res) => {
   
   // Borrar un articulo
   export const deleteProducto = async (req, res) => {
-    try {
-      const { id_articulo } = req.params;
-      await Producto.destroy({
+    const { id_producto } = req.params;
+    try {      
+      const productoEliminado = await Producto.destroy({
         where: {
-          id_articulo: id_articulo,
+          id_producto: id_producto,
         },
       });
-      res.sendStatus(204);
+      if(await productoEliminado.destroy()) {
+        res.status(200).json({mensaje: 'Producto eliminado'}) 
+      }
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
