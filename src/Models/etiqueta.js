@@ -10,6 +10,7 @@ export const Etiqueta = sequelize.define('Etiquetas', {
     },
     nombre_etiqueta: {
         type: DataTypes.STRING(100),
+        unique: true,
         allowNull: false
     },
 }, {

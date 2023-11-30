@@ -4,6 +4,7 @@ import { Comentario } from "../Models/comentario.js";
 import { Imagen } from "../Models/imagen.js";
 import { Usuario } from "../Models/usuario.js";
 import { Punto } from "../Models/punto.js";
+import { Etiqueta } from "../Models/etiqueta.js";
 
 //CRUD basico para el modelo producto
 
@@ -13,15 +14,10 @@ export const getAll = async (req, res) => {
   const limite = 8;
   const offsetdinamic = (pagina - 1) * limite;  
   try {
-        
-
-      const allPuntos =  await Punto.findAndCountAll({
+        const allProductos =  await Producto.findAndCountAll({
           include: [
             { model: Usuario,
               attibutes: ['email_usuario']
-            },
-            { model: Etiqueta,
-              attibutes: ['id_etiqueta']
             },
             { model: Imagen,
               attibutes: ['id_imagen']
@@ -31,12 +27,13 @@ export const getAll = async (req, res) => {
             }
           ],
           order: [
-          ['id_punto', 'DESC']
+          ['id_producto', 'DESC']
         ],
         limit: limite,
         offset:offsetdinamic 
       });  
-      res.json(allPuntos);        
+      
+      res.json(allProductos);        
     } catch (error) {
         return res.status(500).json({message:error.message});
     }
@@ -76,7 +73,8 @@ export const getAllProductos  = async (req, res) => {
 export const getProductoByName = async (req, res) => {
   try {
     const { nombres_producto } = req.params;
-    const oneProducto = await Producto.findAll(nombres_producto,{
+    const oneProducto = await Producto.findAll({
+      where: { nombres_producto: nombres_producto }, 
       include: [
         { model: Usuario,
           attibutes: ['email_usuario']
