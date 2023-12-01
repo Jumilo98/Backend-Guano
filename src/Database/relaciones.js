@@ -29,10 +29,6 @@ Imagen.belongsTo(Producto, { foreignKey: 'id_producto'})
 Punto.hasMany(Imagen, { foreignKey:'id_punto'});
 Imagen.belongsTo(Punto, { foreignKey: 'id_punto'})
 
-//relacion uno a muchos Producto - Comentarios
-Producto.hasMany(Comentario, { foreignKey:'id_producto'});
-Comentario.belongsTo(Producto, { foreignKey: 'id_producto'})
-
 //relacion uno a muchos Punto - Comentarios
 Punto.hasMany(Comentario, { foreignKey:'id_punto'});
 Comentario.belongsTo(Punto, { foreignKey: 'id_punto'})

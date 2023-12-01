@@ -49,11 +49,11 @@ INSERT INTO public."Imagenes" (url_imagen, id_imagen_cloudinary, id_producto, id
 VALUES ('http://res.cloudinary.com/dg2squ3zi/image/upload/v1700629238/uzb0gzycaq0px3itpmru.jpg', 'uzb0gzycaq0px3itpmru', null, 4);
 
 --Llenado de tabla Comentarios
-INSERT INTO public."Comentarios" (mensaje_comentario, id_producto, id_punto) 
-VALUES ('Este es un mensaje para el pendejisimo1', 1, null);
-INSERT INTO public."Comentarios" (mensaje_comentario, id_producto, id_punto) 
-VALUES ('Este es un mensaje para el pendejisimo2', null, 2);
-INSERT INTO public."Comentarios" (mensaje_comentario, id_producto, id_punto) 
-VALUES ('Este es un mensaje para el pendejisimo3', 3, null);
-INSERT INTO public."Comentarios" (mensaje_comentario, id_producto, id_punto) 
-VALUES ('Este es un mensaje para el pendejisimo4', null, 4);
+INSERT INTO public."Comentarios" (mensaje_comentario, id_punto) 
+VALUES ('Este es un mensaje para el pendejisimo1', 1);
+INSERT INTO public."Comentarios" (mensaje_comentario, id_punto) 
+VALUES ('Este es un mensaje para el pendejisimo2', 2);
+INSERT INTO public."Comentarios" (mensaje_comentario, id_punto) 
+VALUES ('Este es un mensaje para el pendejisimo3', 3);
+INSERT INTO public."Comentarios" (mensaje_comentario, id_punto) 
+VALUES ('Este es un mensaje para el pendejisimo4', 4);

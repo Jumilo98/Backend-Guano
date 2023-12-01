@@ -1,6 +1,11 @@
 //importar los modelas y sus relaciones
 import "../Database/relaciones.js";
+import { Comentario } from "../Models/comentario.js";
+import { Punto } from "../Models/punto.js";
 import { Usuario } from "../Models/usuario.js"
+import { Producto } from "../Models/producto.js";
+import { Etiqueta } from "../Models/etiqueta.js";
+import { Imagen } from "../Models/imagen.js";
 
 //CRUD basico para el modelo Usuario
 // Obtener la lista de usuarios
@@ -10,7 +15,31 @@ export const getAllUsuarios = async (req, res) => {
   const offsetdinamic = (pagina - 1) * limite;
   try {
     const allUsuarios= await Usuario.findAndCountAll({
-        order: [
+      include: [
+        { model: Producto,
+          attibutes: ['id_producto'],
+          include: [                        
+            { model: Imagen,
+              attibutes: ['id_imagen']
+            }
+          ]
+        },
+        { model: Punto,
+          attibutes: ['id_punto'],
+          include: [                        
+            { model: Comentario,
+              attibutes: ['id_comentario']
+            },
+            { model: Etiqueta,
+              attibutes: ['id_etiqueta']
+            },
+            { model: Imagen,
+              attibutes: ['id_imagen']
+            }
+          ]
+        }
+      ],  
+      order: [
         ['id_usuario', 'DESC']
       ],
       limit: limite,
@@ -26,7 +55,35 @@ export const getAllUsuarios = async (req, res) => {
 export const getUsuarioById = async (req, res) => {
   try {
     const { id_usuario } = req.params;
-    const oneUsuario = await Usuario.findByPk(id_usuario);
+    const oneUsuario = await Usuario.findByPk(id_usuario,{
+      include: [
+        { model: Producto,
+          attibutes: ['id_producto'],
+          include: [                        
+            { model: Imagen,
+              attibutes: ['id_imagen']
+            }
+          ]
+        },
+        { model: Punto,
+          attibutes: ['id_punto'],
+          include: [                        
+            { model: Comentario,
+              attibutes: ['id_comentario']
+            },
+            { model: Etiqueta,
+              attibutes: ['id_etiqueta']
+            },
+            { model: Imagen,
+              attibutes: ['id_imagen']
+            }
+          ]
+        }
+      ],  
+      order: [
+        ['id_usuario', 'DESC']
+      ],
+    }); 
     if (!oneUsuario)
       return res.status(404).json({ message: "Usuario no registrado" });
     res.json(oneUsuario);
@@ -78,14 +135,21 @@ export const updateUsuario = async (req, res) => {
 
 // Borrar un Usuario
 export const deleteUsuario= async (req, res) => {
-  try {
-    const { id_usuario } = req.params;
+  const { id_usuario } = req.params;
+  try {    
     const usuarioEliminado = await Usuario.destroy({
       where: {
-        id_usuario: id_usuario,
+        id_usuario
       },
     });
-    if(await usuarioEliminado.destroy()) {
+
+    if(!usuarioEliminado) {
+      return res.status(404).json({
+        mensaje: 'No se encontró el usuario con ese id'
+      });
+    }
+
+    if(usuarioEliminado) {
       res.status(200).json({mensaje: 'Usuario eliminado'}) 
     }
   } catch (error) {

@@ -179,10 +179,17 @@ export const updateProducto = async (req, res) => {
     try {      
       const productoEliminado = await Producto.destroy({
         where: {
-          id_producto: id_producto,
+          id_producto
         },
       });
-      if(await productoEliminado.destroy()) {
+
+      if(!productoEliminado) {
+        return res.status(404).json({
+          mensaje: 'No se encontró el producto con ese id'
+        });
+      }
+
+      if(productoEliminado) {
         res.status(200).json({mensaje: 'Producto eliminado'}) 
       }
     } catch (error) {

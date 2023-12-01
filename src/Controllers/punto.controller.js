@@ -152,10 +152,17 @@ export const updatePunto = async (req, res) => {
     try {      
       const puntoEliminado =  await Punto.destroy({
         where: {
-          id_punto: id_punto,
+          id_punto
         },
       });
-      if(await puntoEliminado.destroy()) {
+
+      if(!puntoEliminado) {
+        return res.status(404).json({
+          mensaje: 'No se encontró el punto con ese id'
+        });
+      }
+
+      if(puntoEliminado) {
         res.status(200).json({mensaje: 'Punto eliminado'}) 
       }
     } catch (error) {

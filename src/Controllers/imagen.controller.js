@@ -232,34 +232,24 @@ export const updateImagenP = async (req, res) => {
       }
   });    
 };
-  // Borrar una imagen de producto
-  export const deleteImagenPr = async (req, res) => {
-    try {
-      const { id_imagen, id_producto } = req.params;
-     const imagenEliminado = await Imagen.destroy({
-        where: {
-          id_imagen: id_imagen,
-        },
-      });
-      id_producto
-      if(await imagenEliminado.destroy()) {
-        res.status(200).json({mensaje: 'Imagen eliminado'}) 
-      }
-    } catch (error) {
-      return res.status(500).json({ message: error.message });
-    }
-  };
+
   // Borrar una imagen de puntos
-  export const deleteImagenP = async (req, res) => {
-    try {
-      const { id_imagen, id_punto } = req.params;
+  export const deleteImagen = async (req, res) => {
+    const { id_imagen } = req.params;
+    try {      
       const imagenEliminado = await Imagen.destroy({
         where: {
-          id_imagen: id_imagen,
+          id_imagen
         },
       });
-      id_punto
-      if(await imagenEliminado.destroy()) {
+      
+      if(!imagenEliminado) {
+        return res.status(404).json({
+          mensaje: 'No se encontró la imagen con ese id'
+        });
+      }
+
+      if(imagenEliminado) {
         res.status(200).json({mensaje: 'Imagen eliminado'}) 
       }
     } catch (error) {
