@@ -1,6 +1,9 @@
-  import "../Database/relaciones.js";
-  import { Comentario } from "../Models/comentario.js"
-  import { Punto } from "../Models/punto.js"
+import "../Database/relaciones.js";
+import { Comentario } from "../Models/comentario.js"
+import { Etiqueta } from "../Models/etiqueta.js";
+import { Imagen } from "../Models/imagen.js";
+import { Punto } from "../Models/punto.js"
+import { Usuario } from "../Models/usuario.js";
 
   //CRUD basico para el modelo Comentarios
     // Obtener la lista de comentarios de punto
@@ -12,8 +15,19 @@
           const allComentarios =  await Comentario.findAndCountAll({
             include: [
               { model: Punto,
-                attibutes: ['nombre_punto']
-            }
+                attibutes: ['nombre_punto'],
+                include:[
+                  { model: Imagen,
+                    attibutes: ['id_imagen']
+                  },
+                  { model: Usuario,
+                    attibutes: ['id_usuario']
+                  },
+                  { model: Etiqueta,
+                    attibutes: ['id_etiqueta']
+                  }
+                ]
+              }            
             ],
             order: [
               ['id_comentario', 'DESC']
@@ -29,17 +43,29 @@
 
 // Obtener un comentario en especifico de puntos
 export const getComentarioById = async (req, res) => {
-  try {
-    const { id_comentario } = req.params;
-    const { id_punto } = req.body;
+  const { id_comentario } = req.params;
+  try {    
     const oneComentario = await Comentario.findByPk(id_comentario,{
       include: [
-        { model: Punto ,
-          attibutes: ['nombre_punto']
-        }
-      ]
+        { model: Punto,
+          attibutes: ['nombre_punto'],
+          include:[
+            { model: Imagen,
+              attibutes: ['id_imagen']
+            },
+            { model: Usuario,
+              attibutes: ['id_usuario']
+            },
+            { model: Etiqueta,
+              attibutes: ['id_etiqueta']
+            }
+          ]
+        }            
+      ],
+      order: [
+        ['id_comentario', 'DESC']
+      ],
     });
-    id_punto 
     if (!oneComentario)
       return res.status(404).json({ message: "Comentario no registrado" });
       res.json(oneComentario);
@@ -69,7 +95,7 @@ export const getComentarioById = async (req, res) => {
   export const updateComentario = async (req, res) => {
     const { id_comentario } = req.params; 
     try {
-      const { newMensaje, id_punto } = req.body;
+      const { newMensaje } = req.body;
       const comentarioActualizado = await Comentario.findOne({
         where: { id_comentario }
       });
@@ -78,7 +104,6 @@ export const getComentarioById = async (req, res) => {
        return res.status(404).json({mensaje: 'Comentario no encontrado'});
       }
       comentarioActualizado.mensaje_comentario = newMensaje;
-      id_punto
       if(await comentarioActualizado.save()) {
         res.json(comentarioActualizado); 
       }

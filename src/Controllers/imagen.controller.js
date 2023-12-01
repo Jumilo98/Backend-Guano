@@ -3,38 +3,18 @@ import "../Database/relaciones.js";
 import { Imagen } from "../Models/imagen.js"
 import { Punto } from "../Models/punto.js";
 import { Producto } from "../Models/producto.js";
+import { Usuario } from "../Models/usuario.js";
+import { Etiqueta } from "../Models/etiqueta.js";
+import { Comentario } from "../Models/comentario.js";
 
 import multer from 'multer';
 import {v2 as cloudinary} from 'cloudinary';
 import fs from 'fs';
 
 //CRUD basico para el modelo Imagen
-// Obtener la lista de imagenes de productos
-export const getAllImagenesPr = async (req, res) => {
-  const pagina = parseInt(req.query.pagina) || 1; // Obtiene el número de página desde la consulta, por defecto es 1
-    const limite = 8;
-    const offsetdinamic = (pagina - 1) * limite;  
-  try {
-        const allImagenes =  await Imagen.findAndCountAll({
-          include: [
-            { model: Producto,
-              attibutes: ['nombre_producto']
-            }
-          ],
-          order: [
-            ['id_imagen', 'DESC']
-          ],
-          limit: limite,
-          offset:offsetdinamic 
-        });  
-        res.json(allImagenes);
-    } catch (error) {
-        return res.status(500).json({message:error.message});
-    }
-};
 
-// Obtener la lista de imagenes de puntos
-export const getAllImagenesP = async (req, res) => {
+// Obtener la lista de imagenes
+export const getAllImagenes = async (req, res) => {
   const pagina = parseInt(req.query.pagina) || 1; // Obtiene el número de página desde la consulta, por defecto es 1
   const limite = 8;
   const offsetdinamic = (pagina - 1) * limite;
@@ -42,53 +22,73 @@ export const getAllImagenesP = async (req, res) => {
       const allImagenes =  await Imagen.findAndCountAll({
         include: [
           { model: Punto,
-            attibutes: ['nombre_punto']
-        }
+            attibutes: ['nombre_punto'],
+            include:[
+              { model: Etiqueta,
+                attibutes: ['id_etiqueta']
+              },
+              { model: Usuario,
+                attibutes: ['id_usuario']
+              },
+              { model: Comentario,
+                attibutes: ['id_comentario']
+              }
+            ]
+          },
+          { model: Producto,
+            attibutes: ['nombre_producto'],
+            include:[             
+              { model: Usuario,
+                attibutes: ['id_usuario']
+              }
+            ]
+          },
         ],
         order: [
           ['id_imagen', 'DESC']
         ],
         limit: limite,
         offset:offsetdinamic 
-      });
+      }); 
       res.json(allImagenes);
   } catch (error) {
       return res.status(500).json({message:error.message});
   }
 };
 
-// Obtener un imagen en especifico de productos
-export const getImagenPrById = async (req, res) => {
-    try {
-      const { id_imagen, id_producto } = req.params;
-      const oneImagen = await Imagen.findByPk(id_imagen,{
-        include: [
-          { model: Producto,
-            attibutes: ['nombre_producto']
-          }
-        ]
-      });
-      id_producto
-      if (!oneImagen)
-        return res.status(404).json({ message: "Imagen no registrado" });
-      res.json(oneImagen);
-    } catch (error) {
-      return res.status(500).json({ message: error.message });
-    }
-  };
-
 // Obtener un imagen en especifico de puntos
-export const getImagenPById = async (req, res) => {
+export const getImagenById = async (req, res) => {
+  const { id_imagen} = req.params;
   try {
-    const { id_imagen, id_punto } = req.params;
     const oneImagen = await Imagen.findByPk(id_imagen,{
       include: [
-        { model: Punto ,
-          attibutes: ['nombre_punto']
-        }
-      ]
-    });
-    id_punto 
+        { model: Punto,
+          attibutes: ['nombre_punto'],
+          include:[
+            { model: Etiqueta,
+              attibutes: ['id_etiqueta']
+            },
+            { model: Usuario,
+              attibutes: ['id_usuario']
+            },
+            { model: Comentario,
+              attibutes: ['id_comentario']
+            }
+          ]
+        },
+        { model: Producto,
+          attibutes: ['nombre_producto'],
+          include:[             
+            { model: Usuario,
+              attibutes: ['id_usuario']
+            }
+          ]
+        },
+      ],
+      order: [
+        ['id_imagen', 'DESC']
+      ],
+    }); 
     if (!oneImagen)
       return res.status(404).json({ message: "Imagen no registrado" });
     res.json(oneImagen);
@@ -96,6 +96,7 @@ export const getImagenPById = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
   // Configuración de Multer
   const upload = multer({
     dest: 'uploads/',
@@ -103,9 +104,13 @@ export const getImagenPById = async (req, res) => {
       fileSize: 50 * 1024 * 1024, // Limita el tamaño del archivo a 50 MB
     },
   });
+
   //Crea la imagen para un producto
   export const createImagenPr = async (req, res) => {
     const {id_producto} = req.params; // las foreign keys se les escribe tal y como son
+    const producto = await Producto.findByPk(id_producto);
+    if (!producto)
+            return res.status(404).json({ message: "Producto no encontrado" });
     // Multer procesará el archivo
     upload.single('imagen')(req, res, async (err) => {
         if (err) {
@@ -124,8 +129,9 @@ export const getImagenPById = async (req, res) => {
             const nuevoImagen = await Imagen.create({
                 url_imagen: result.secure_url,
                 id_imagen_cloudinary: result.public_id,
-                id_producto: id_producto
+                id_producto
             });
+            
             // Envía la respuesta
             console.log("Nuevo imagen creado asociado al producto ID:", id_producto);
             res.json( nuevoImagen);
@@ -138,6 +144,9 @@ export const getImagenPById = async (req, res) => {
  //Crea la imagen para un punto
 export const createImagenP = async (req, res) => {
   const {id_punto} = req.params; // Accede al id_articulo de los parámetros de la ruta
+  const punto = await Punto.findByPk(id_punto);
+    if (!punto)
+            return res.status(404).json({ message: "Punto no encontrado" });
   // Multer procesará el archivo
   upload.single('imagen')(req, res, async (err) => {
       if (err) {
@@ -156,11 +165,12 @@ export const createImagenP = async (req, res) => {
           const nuevoImagen = await Imagen.create({
               url_imagen: result.secure_url,
               id_imagen_cloudinary: result.public_id,
-              id_punto: id_punto
+              id_punto
           });
           // Envía la respuesta
           console.log("Nuevo imagen creado asociado al artículo ID:", id_punto);
           res.json(nuevoImagen);
+
       } catch (error) {
           if (req.file) fs.unlinkSync(req.file.path);
           res.status(500).json({ message: error.message });
@@ -171,6 +181,9 @@ export const createImagenP = async (req, res) => {
 // Actualizar un imagen para producto
 export const updateImagenPr = async (req, res) => {
   const { id_imagen, id_producto } = req.params;  
+  const producto = await Producto.findByPk(id_producto);
+    if (!producto)
+            return res.status(404).json({ message: "Producto no encontrado" });
   // Multer procesará el archivo
     upload.single('imagen')(req, res, async (err) => {
         if (err) {
@@ -203,6 +216,9 @@ export const updateImagenPr = async (req, res) => {
   // Actualizar un imagen para puntos
 export const updateImagenP = async (req, res) => {
   const { id_imagen, id_punto } = req.params;
+  const punto = await Punto.findByPk(id_punto);
+  if (!punto)
+    return res.status(404).json({ message: "Punto no encontrado" });
   // Multer procesará el archivo
   upload.single('imagen')(req, res, async (err) => {
       if (err) {
