@@ -27,6 +27,35 @@ export const getAllEtiquetas  = async (req, res) => {
     }
 };
 
+// Obtener un proucto en especifico por nombre 
+export const getProductoByName = async (req, res) => {
+  try {
+    const { nombres_producto } = req.params;
+    const oneProducto = await Producto.findOne({
+      where: { nombres_producto: nombres_producto }, 
+      include: [
+        { model: Usuario,
+          attibutes: ['email_usuario']
+        },
+        { model: Imagen,
+          attibutes: ['id_imagen']
+        },
+        { model: Comentario,
+          attibutes: ['id_comentario']
+        }
+      ],
+      order: [
+      ['nombres_producto', 'DESC']
+    ],
+    });
+    if (!oneProducto)
+      return res.status(404).json({ message: "Producto no registrado" });
+    res.json(oneProducto);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}; 
+
 // Obtener una etiqueta en especifico 
 export const getEtiquetaById = async (req, res) => {
     try {

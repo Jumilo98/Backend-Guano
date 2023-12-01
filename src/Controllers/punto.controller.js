@@ -43,7 +43,7 @@ export const getAllPuntos  = async (req, res) => {
 export const getPuntoByName = async (req, res) => {
   try {
     const { nombres_punto } = req.params;
-    const onePunto = await Punto.findAll(nombres_punto,{
+    const onePunto = await Punto.findOne(nombres_punto,{
       include: [
         { model: Usuario,
           attibutes: ['email_usuario']

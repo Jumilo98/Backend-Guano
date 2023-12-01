@@ -73,7 +73,7 @@ export const getAllProductos  = async (req, res) => {
 export const getProductoByName = async (req, res) => {
   try {
     const { nombres_producto } = req.params;
-    const oneProducto = await Producto.findAll({
+    const oneProducto = await Producto.findOne({
       where: { nombres_producto: nombres_producto }, 
       include: [
         { model: Usuario,
