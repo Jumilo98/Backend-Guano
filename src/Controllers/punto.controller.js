@@ -96,7 +96,8 @@ export const getAllPuntos  = async (req, res) => {
 export const getPuntoByName = async (req, res) => {
   try {
     const { nombres_punto } = req.params;
-    const onePunto = await Punto.findOne(nombres_punto,{
+    const onePunto = await Punto.findOne({
+      where: { nombres_punto: nombres_punto }, 
       include: [
         { model: Usuario,
           attibutes: ['email_usuario']
@@ -117,7 +118,7 @@ export const getPuntoByName = async (req, res) => {
     });
     if (!onePunto)
       return res.status(404).json({ message: "Punto no registrado" });
-    res.json(oneProducto);
+    res.json(onePunto);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -127,7 +128,7 @@ export const getPuntoByName = async (req, res) => {
 export const getPuntoById = async (req, res) => {
     try {
       const { id_punto } = req.params;
-    const onePunto = await Punto.findAll(id_punto,{
+    const onePunto = await Punto.findByPk(id_punto,{
       include: [
         { model: Usuario,
           attibutes: ['email_usuario']
@@ -148,7 +149,7 @@ export const getPuntoById = async (req, res) => {
     });
     if (!onePunto)
       return res.status(404).json({ message: "Punto no registrado" });
-    res.json(oneProducto);
+    res.json(onePunto);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

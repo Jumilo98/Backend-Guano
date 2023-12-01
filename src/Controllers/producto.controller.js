@@ -103,9 +103,6 @@ export const getProductoByName = async (req, res) => {
         { model: Imagen,
           attibutes: ['id_imagen']
         },
-        { model: Comentario,
-          attibutes: ['id_comentario']
-        }
       ],
       order: [
       ['nombres_producto', 'DESC']
@@ -123,7 +120,7 @@ export const getProductoByName = async (req, res) => {
 export const getProductoById = async (req, res) => {
     try {
       const { id_producto } = req.params;
-      const oneProducto = await Producto.findOne(id_producto,{
+      const oneProducto = await Producto.findByPk(id_producto,{
         include: [
           { model: Usuario,
             attibutes: ['email_usuario']
@@ -131,9 +128,6 @@ export const getProductoById = async (req, res) => {
           { model: Imagen,
             attibutes: ['id_imagen']
           },
-          { model: Comentario,
-            attibutes: ['id_comentario']
-          }
         ],
         order: [
         ['id_producto', 'DESC']
