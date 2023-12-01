@@ -21,19 +21,40 @@ export const getAll = async (req, res) => {
             },
             { model: Imagen,
               attibutes: ['id_imagen']
-            },
-            { model: Comentario,
-              attibutes: ['id_comentario']
-            }
+            },           
           ],
           order: [
           ['id_producto', 'DESC']
         ],
         limit: limite,
         offset:offsetdinamic 
-      });  
+      })
       
-      res.json(allProductos);        
+      const allPuntos =  await Punto.findAndCountAll({
+        include: [
+          { model: Usuario,
+            attibutes: ['email_usuario']
+          },
+          { model: Imagen,
+            attibutes: ['id_imagen']
+          },
+          { model: Comentario,
+            attibutes: ['id_comentario']
+          },
+          { model: Etiqueta,
+            attibutes: ['id_etiqueta']
+          }
+        ],
+        order: [
+        ['id_punto', 'DESC']
+      ],
+      limit: limite,
+      offset:offsetdinamic 
+    })
+      res.json({
+        productos: allProductos,
+        puntos: allPuntos
+      });       
     } catch (error) {
         return res.status(500).json({message:error.message});
     }

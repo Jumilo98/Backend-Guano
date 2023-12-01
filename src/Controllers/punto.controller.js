@@ -6,6 +6,59 @@ import { Comentario } from "../Models/comentario.js";
 import { Etiqueta } from "../Models/etiqueta.js";
 
 //CRUD basico para el modelo Punto
+
+//obtengo los productos y puntos
+export const getAll = async (req, res) => {
+  const pagina = parseInt(req.query.pagina) || 1  ; // Obtiene el número de página desde la consulta, por defecto es 1
+  const limite = 8;
+  const offsetdinamic = (pagina - 1) * limite;  
+  try {
+        const allProductos =  await Producto.findAndCountAll({
+          include: [
+            { model: Usuario,
+              attibutes: ['email_usuario']
+            },
+            { model: Imagen,
+              attibutes: ['id_imagen']
+            },           
+          ],
+          order: [
+          ['id_producto', 'DESC']
+        ],
+        limit: limite,
+        offset:offsetdinamic 
+      })
+      
+      const allPuntos =  await Punto.findAndCountAll({
+        include: [
+          { model: Usuario,
+            attibutes: ['email_usuario']
+          },
+          { model: Imagen,
+            attibutes: ['id_imagen']
+          },
+          { model: Comentario,
+            attibutes: ['id_comentario']
+          },
+          { model: Etiqueta,
+            attibutes: ['id_etiqueta']
+          }
+        ],
+        order: [
+        ['id_punto', 'DESC']
+      ],
+      limit: limite,
+      offset:offsetdinamic 
+    })
+      res.json({
+        productos: allProductos,
+        puntos: allPuntos
+      });       
+    } catch (error) {
+        return res.status(500).json({message:error.message});
+    }
+};
+
 // Obtener la lista de puntos por id 
 export const getAllPuntos  = async (req, res) => {
   const pagina = parseInt(req.query.pagina) || 1  ; // Obtiene el número de página desde la consulta, por defecto es 1
