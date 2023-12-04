@@ -13,7 +13,7 @@ router.put('/producto/imagen/:id_producto/:id_imagen', updateImagenPr);//id del 
 router.post('/punto/imagen/:id_punto', createImagenP);//id del punto 
 router.put('/punto/imagen/:id_punto/:id_imagen', updateImagenP);//id del punto y la imagen
 
-router.get('/imagenes', getAllImagenes);
+router.get('/imagenes/:pagina', getAllImagenes);
 router.get('/imagen/:id_imagen', getImagenById); //id de la imagen
 router.delete('/imagen/:id_imagen', deleteImagen);//id de la imagen
 

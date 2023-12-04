@@ -4,8 +4,8 @@ import {getAllProductos, getAll, getProductoById, getProductoByName, createProdu
 const router = Router();
 
 //rutas de conexion al controlador producto
-router.get('/all', getAll);
-router.get('/productos', getAllProductos);
+router.get('/all/:pagina', getAll);
+router.get('/productos/:pagina', getAllProductos);
 router.get('/producto/:id_producto', getProductoById);//id del producto
 router.get('/producto/nombre/:nombres_producto', getProductoByName)//todos los productos por nombre
 router.post('/producto', createProducto);

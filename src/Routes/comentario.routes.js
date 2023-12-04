@@ -4,7 +4,7 @@ import { getAllComentarios, getComentarioById , createComentario , updateComenta
 const router =  Router ();
 
 //Rutas de conexion al controlador comentario Punto
-router.get('/comentarios', getAllComentarios);
+router.get('/comentarios/:pagina', getAllComentarios);
 router.get('/comentario/:id_comentario', getComentarioById); // id del cometnario
 router.post('/comentario/:id_punto', createComentario);//id del punto
 router.put('/comentario/:id_comentario', updateComentario); //id del comentario

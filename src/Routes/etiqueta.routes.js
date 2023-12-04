@@ -4,7 +4,7 @@ import { getAllEtiquetas, getEtiquetaById, getEtiquetaByName, createEtiqueta , u
 const router =  Router ();
 
 //Rutas de conexion al controlador etiqueta
-router.get('/etiquetas', getAllEtiquetas);
+router.get('/etiquetas/:pagina', getAllEtiquetas);
 router.get('/etiqueta/:id_etiqueta', getEtiquetaById); //id de la etiqueta
 router.post('/etiqueta', createEtiqueta); 
 router.put('/etiqueta/:id_etiqueta', updateEtiqueta); //id de la etiqueta

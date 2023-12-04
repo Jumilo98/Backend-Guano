@@ -9,7 +9,7 @@ import { Etiqueta } from "../Models/etiqueta.js";
 
 //obtengo los productos y puntos
 export const getAll = async (req, res) => {
-  const pagina = parseInt(req.query.pagina) || 1  ; // Obtiene el número de página desde la consulta, por defecto es 1
+  const {pagina} = req.params;
   const limite = 8;
   const offsetdinamic = (pagina - 1) * limite;  
   try {
@@ -61,7 +61,7 @@ export const getAll = async (req, res) => {
 
 // Obtener la lista de puntos por id 
 export const getAllPuntos  = async (req, res) => {
-  const pagina = parseInt(req.query.pagina) || 1  ; // Obtiene el número de página desde la consulta, por defecto es 1
+  const {pagina} = req.params;
   const limite = 8;
   const offsetdinamic = (pagina - 1) * limite;  
   try {

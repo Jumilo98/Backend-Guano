@@ -4,7 +4,7 @@ import { getAllUsuarios, getUsuarioById , createUsuario , updateUsuario , delete
 const router =  Router ();
 
 //Rutas de conexion al controlador usuario
-router.get('/usuarios', getAllUsuarios);
+router.get('/usuarios/:pagina', getAllUsuarios);
 router.post('/usuario', createUsuario);
 router.put('/usuario/:id_usuario', updateUsuario);//id del usuario
 router.delete('/usuario/:id_usuario', deleteUsuario);//id del usuario

@@ -9,7 +9,7 @@ import { Usuario } from "../Models/usuario.js";
 
 // Obtener la lista de etiquetas 
 export const getAllEtiquetas  = async (req, res) => {
-    const pagina = parseInt(req.query.pagina) || 1  ; // Obtiene el número de página desde la consulta, por defecto es 1
+    const {pagina} = req.params;
     const limite = 8;
     const offsetdinamic = (pagina - 1) * limite;
     try {
