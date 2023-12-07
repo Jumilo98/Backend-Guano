@@ -1,10 +1,14 @@
 import "../Database/relaciones.js";
+import { Op } from "sequelize";
+
 import { Producto } from "../Models/producto.js";
 import { Comentario } from "../Models/comentario.js";
 import { Imagen } from "../Models/imagen.js";
 import { Usuario } from "../Models/usuario.js";
 import { Punto } from "../Models/punto.js";
 import { Etiqueta } from "../Models/etiqueta.js";
+
+
 
 //CRUD basico para el modelo producto
 
@@ -73,9 +77,6 @@ export const getAllProductos  = async (req, res) => {
             },
             { model: Imagen,
               attibutes: ['id_imagen']
-            },
-            { model: Comentario,
-              attibutes: ['id_comentario']
             }
           ],
           order: [
@@ -92,10 +93,12 @@ export const getAllProductos  = async (req, res) => {
 
 // Obtener un proucto en especifico por nombre 
 export const getProductoByName = async (req, res) => {
+  const {nombres_producto, pagina} = req.params;
+  const limite = 8;
+  const offsetdinamic = (pagina - 1) * limite;
   try {
-    const { nombres_producto } = req.params;
-    const oneProducto = await Producto.findOne({
-      where: { nombres_producto: nombres_producto }, 
+    const Productos = await Producto.findAndCountAll({
+      where: { nombres_producto: { [Op.iLike]: `%${nombres_producto}%`} }, 
       include: [
         { model: Usuario,
           attibutes: ['email_usuario']
@@ -105,12 +108,14 @@ export const getProductoByName = async (req, res) => {
         },
       ],
       order: [
-      ['nombres_producto', 'DESC']
-    ],
+        ['nombres_producto', 'DESC']
+      ],
+      limit: limite,
+      offset:offsetdinamic 
     });
-    if (!oneProducto)
+    if (!Productos)
       return res.status(404).json({ message: "Producto no registrado" });
-    res.json(oneProducto);
+    res.json(Productos);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

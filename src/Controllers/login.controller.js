@@ -15,7 +15,7 @@ export const verificarUsuario = async (req, res) => {
         if (usuarioEncontrado.contrasenia_usuario != contrasenia) {
             return res.status(403).json({message: "Contraseña incorrecta"});
         } else {
-            res.json({error: null, data: 'Bienvenido'})
+            res.json(usuarioEncontrado);
         }    
     } catch (error) {
         return res.status(500).json({ message: error.message });

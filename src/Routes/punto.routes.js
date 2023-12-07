@@ -7,7 +7,7 @@ const router = Router();
 router.get('/all/:pagina', getAll);
 router.get('/puntos/:pagina', getAllPuntos);
 router.get('/punto/:id_punto', getPuntoById);//id del punto
-router.get('/punto/nombre/:nombres_punto', getPuntoByName);//todos los productos por nombre
+router.get('/punto/nombre/:nombres_punto/:pagina', getPuntoByName);//todos los productos por nombre
 router.post('/punto', createPunto);
 router.put('/punto/:id_punto', updatePunto);//id del punto
 router.delete('/punto/:id_punto', deletePunto);//id del punto

@@ -48,22 +48,6 @@ export const getEtiquetaByName = async (req, res) => {
     const { nombre_etiqueta } = req.params;
     const oneEtiqueta = await Etiqueta.findOne({
       where: { nombre_etiqueta : nombre_etiqueta }, 
-      include: [
-        { model: Punto,
-          attibutes: ['nombre_punto'],
-          include:[
-            { model: Imagen,
-              attibutes: ['id_imagen']
-            },
-            { model: Usuario,
-              attibutes: ['id_usuario']
-            },
-            { model: Comentario,
-              attibutes: ['id_comentario']
-            }
-          ]
-        }            
-      ],
       order: [
         ['nombre_etiqueta', 'DESC']
       ],

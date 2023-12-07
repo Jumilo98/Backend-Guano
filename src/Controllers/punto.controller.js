@@ -1,4 +1,5 @@
 import "../Database/relaciones.js";
+import { Op } from "sequelize";
 import { Punto } from "../Models/punto.js";
 import { Imagen } from "../Models/imagen.js"
 import { Usuario } from "../Models/usuario.js";
@@ -94,10 +95,12 @@ export const getAllPuntos  = async (req, res) => {
 
 // Obtener un articulo en especifico 
 export const getPuntoByName = async (req, res) => {
+  const {nombres_punto, pagina} = req.params;
+  const limite = 8;
+  const offsetdinamic = (pagina - 1) * limite;
   try {
-    const { nombres_punto } = req.params;
-    const onePunto = await Punto.findOne({
-      where: { nombres_punto: nombres_punto }, 
+    const puntos = await Punto.findAndCountAll({
+      where: { nombres_punto: { [Op.iLike]: `%${nombres_punto}%`} }, 
       include: [
         { model: Usuario,
           attibutes: ['email_usuario']
@@ -113,12 +116,14 @@ export const getPuntoByName = async (req, res) => {
         }
       ],
       order: [
-      ['nombres_punto', 'DESC']
-    ],
+        ['nombres_punto', 'DESC']
+      ],
+      limit: limite,
+      offset:offsetdinamic 
     });
-    if (!onePunto)
+    if (!puntos)
       return res.status(404).json({ message: "Punto no registrado" });
-    res.json(onePunto);
+    res.json(puntos);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

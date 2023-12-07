@@ -7,7 +7,7 @@ const router = Router();
 router.get('/all/:pagina', getAll);
 router.get('/productos/:pagina', getAllProductos);
 router.get('/producto/:id_producto', getProductoById);//id del producto
-router.get('/producto/nombre/:nombres_producto', getProductoByName)//todos los productos por nombre
+router.get('/producto/nombre/:nombres_producto/:pagina', getProductoByName)//todos los productos por nombre
 router.post('/producto', createProducto);
 router.put('/producto/:id_producto', updateProducto); //id del producto
 router.delete('/producto/:id_producto', deleteProducto);//id del producto

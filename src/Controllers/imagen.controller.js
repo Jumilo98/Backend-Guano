@@ -160,7 +160,7 @@ export const createImagenP = async (req, res) => {
           // Sube el archivo a Cloudinary
           const result = await cloudinary.uploader.upload(req.file.path);
           // Elimina el archivo subido del sistema de archivos local después de subirlo a Cloudinary
-          fs.unlinkSync(req.file.path);
+          //fs.unlinkSync(req.file.path);
           // Crea un nuevo imagen
           const nuevoImagen = await Imagen.create({
               url_imagen: result.secure_url,
