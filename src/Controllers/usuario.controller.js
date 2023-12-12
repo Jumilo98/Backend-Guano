@@ -51,6 +51,25 @@ export const getAllUsuarios = async (req, res) => {
   }
 };
 
+//Obtener lista solo de usuarios
+export const getOnlyUsuarios = async (req, res) => {
+  const {pagina} = req.params;
+  const limite = 8;
+  const offsetdinamic = (pagina - 1) * limite;
+  try {
+    const allUsuarios= await Usuario.findAndCountAll({
+      order: [
+        ['id_usuario', 'DESC']
+      ],
+      limit: limite,
+      offset:offsetdinamic 
+    });  
+    res.json(allUsuarios);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 // Obtener un usuario en especifico
 export const getUsuarioById = async (req, res) => {
   try {
