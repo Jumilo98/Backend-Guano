@@ -14,7 +14,7 @@ export const Punto = sequelize.define('Puntos', {
         unique: true
     },
     descripcion_punto: {
-        type: DataTypes.STRING(500),
+        type: DataTypes.TEXT,
     },
     likes_punto: {
         type: DataTypes.INTEGER,

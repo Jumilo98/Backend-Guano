@@ -23,7 +23,7 @@ export const Producto = sequelize.define('Productos', {
         allowNull:false
     },
     descripcion_producto: {
-        type: DataTypes.STRING(500),
+        type: DataTypes.TEXT,
     },
     likes_producto: {
         type: DataTypes.INTEGER,
