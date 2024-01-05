@@ -6,6 +6,7 @@ import { Usuario } from "../Models/usuario.js"
 import { Producto } from "../Models/producto.js";
 import { Etiqueta } from "../Models/etiqueta.js";
 import { Imagen } from "../Models/imagen.js";
+import { Op } from "sequelize";
 
 //CRUD basico para el modelo Usuario
 // Obtener la lista de usuarios
@@ -69,6 +70,23 @@ export const getOnlyUsuarios = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+//Obtener ususario por email
+export const getUsersByEmail = async (req, res) => {
+  const {email_user} = req.params;
+  try {
+    const allUsuarios= await Usuario.findOne({
+      where: { email_usuario: { [Op.iLike]: `${email_user}`} },
+      order: [
+        ['id_usuario', 'DESC']
+      ],
+    });  
+    res.json(allUsuarios);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 
 // Obtener un usuario en especifico
 export const getUsuarioById = async (req, res) => {
